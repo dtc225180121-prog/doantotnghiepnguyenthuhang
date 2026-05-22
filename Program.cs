@@ -15,9 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Prefer cloud env vars in production; only fall back to localhost for local dev.
 // ======================
 var connStr =
-    builder.Configuration["ConnectionStrings__DefaultConnection"]
-    ?? builder.Configuration["CUSTOM_CONNECTION"]
-    ?? NormalizeDatabaseUrl(builder.Configuration["DATABASE_URL"])
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? Environment.GetEnvironmentVariable("CUSTOM_CONNECTION")
+    ?? NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL"))
+    ?? builder.Configuration["ConnectionStrings:DefaultConnection"]
+    ?? builder.Configuration["ConnectionStrings__DefaultConnection"]
     ?? (builder.Environment.IsDevelopment()
         ? builder.Configuration.GetConnectionString("DefaultConnection")
         : null);
