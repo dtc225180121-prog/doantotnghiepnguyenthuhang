@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: aoe-db
+    environment:
+      POSTGRES_DB: aoe
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aoe-backend
+    ports:
+      - "5041:8080" # Map host port 5041 to container port 8080 (default for .NET 8)
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=aoe;Username=postgres;Password=postgres
+      - Jwt__Key=this_is_a_super_secure_secret_key_2026
+      - Gemini__ApiKey=REPLACE_WITH_YOUR_GEMINI_API_KEY # Cần điền Key để dùng tính năng AI
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

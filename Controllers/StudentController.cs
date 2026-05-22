@@ -29,7 +29,7 @@ namespace aoe.Controllers
                 int.Parse(
                     User.FindFirstValue(
                         ClaimTypes.NameIdentifier
-                    )
+                    ) ?? "0"
                 );
 
             var classObj =
@@ -74,7 +74,7 @@ namespace aoe.Controllers
                 int.Parse(
                     User.FindFirstValue(
                         ClaimTypes.NameIdentifier
-                    )
+                    ) ?? "0"
                 );
 
             var classes =
@@ -99,7 +99,7 @@ namespace aoe.Controllers
             int.Parse(
             User.FindFirstValue(
             ClaimTypes.NameIdentifier
-            )
+            ) ?? "0"
             );
 
             var classes =

@@ -69,11 +69,18 @@ location.href =
 
 },
 
+goStudents() {
+
+location.href =
+"/pages/teacher/classes.html";
+
+},
+
 goAssignmentResults(assignmentId) {
 
 location.href =
 
-"/pages/teacher/assignment-results.html?assignmentId="
+"/pages/teacher/results.html?assignmentId="
 
 + assignmentId;
 

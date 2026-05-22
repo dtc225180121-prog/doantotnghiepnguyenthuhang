@@ -48,16 +48,8 @@ function render(assignments) {
 
     assignments.forEach(a => {
 
-    const count =
-        a.questionCount ??
-        a.totalQuestions ??
-        (a.questions ? a.questions.length : 0);
-
-    const type =
-        a.type ??
-        a.questionType ??
-        a.assignmentType ??
-        "unknown";
+    const count = a.questionCount ?? 0;
+    const type = a.questionType ?? "unknown";
 
     const card = document.createElement("div");
     card.className = "assignment-card";

@@ -1,4 +1,4 @@
-﻿using aoe.Models;
+using aoe.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -23,7 +23,7 @@ namespace aoe.Controllers
         public IActionResult AssignmentResults(int assignmentId)
         {
             var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
             );
 
             bool ownsAssignment =
@@ -63,7 +63,7 @@ namespace aoe.Controllers
         public IActionResult ExportCSV(int assignmentId)
         {
             var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
             );
 
             bool ownsAssignment =
@@ -115,7 +115,7 @@ namespace aoe.Controllers
         public IActionResult Review(int assignmentId, int studentId)
         {
             var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
             );
 
             bool ownsAssignment =

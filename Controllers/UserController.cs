@@ -26,7 +26,7 @@ namespace aoe.Controllers
                 int.Parse(
                     User.FindFirstValue(
                         ClaimTypes.NameIdentifier
-                    )
+                    ) ?? "0"
                 );
 
             var user =
@@ -52,7 +52,7 @@ namespace aoe.Controllers
                 int.Parse(
                     User.FindFirstValue(
                         ClaimTypes.NameIdentifier
-                    )
+                    ) ?? "0"
                 );
 
             var user =
@@ -83,7 +83,7 @@ namespace aoe.Controllers
                 int.Parse(
                     User.FindFirstValue(
                         ClaimTypes.NameIdentifier
-                    )
+                    ) ?? "0"
                 );
 
             var user =

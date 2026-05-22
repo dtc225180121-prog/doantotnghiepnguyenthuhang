@@ -36,7 +36,7 @@ async function login() {
 
         console.error(err);
 
-        alert("Login failed");
+        alert(err.message || "Login failed: Please check your credentials.");
 
     }
 

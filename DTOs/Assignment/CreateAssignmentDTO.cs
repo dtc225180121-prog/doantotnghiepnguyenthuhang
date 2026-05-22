@@ -2,9 +2,9 @@
 {
     public class CreateAssignmentDTO
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
-        public string QuestionType { get; set; }
+        public string QuestionType { get; set; } = default!;
 
         public int QuestionCount { get; set; }
 

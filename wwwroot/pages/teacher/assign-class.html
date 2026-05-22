@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assign to Class</title>
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    
+    <script src="../../assets/js/core/config.js"></script>
+    <script src="../../assets/js/core/storage.js"></script>
+    <script src="../../assets/js/core/api.js"></script>
+    <script src="../../assets/js/core/router.js"></script>
+    <script src="../../assets/js/core/guard.js"></script>
+    <script src="../../assets/js/layout/sidebar.js"></script>
+    <script src="../../assets/js/layout/layout.js"></script>
+    
+    <script>
+        Guard.requireLogin();
+        Guard.requireTeacher();
+    </script>
+</head>
+<body>
+    <div id="layout"></div>
+    <div class="content">
+        <div class="container">
+            <div class="topbar">
+                <div class="topbar-title">Assign Assignment to Class</div>
+                <div class="topbar-actions">
+                    <button onclick="Router.goAssignments()">Back</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 id="assignmentName">Loading...</h3>
+                <p id="assignmentDetails" class="text-muted"></p>
+            </div>
+
+            <h4 style="margin-top: 30px;">Select Classes</h4>
+            <div id="classList" class="class-grid">
+                <!-- Classes will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const assignmentId = params.get("assignmentId");
+
+        window.onload = async () => {
+            renderLayout("teacher");
+            if (!assignmentId) {
+                alert("No assignment selected");
+                Router.goAssignments();
+                return;
+            }
+            await loadAssignment();
+            await loadClasses();
+        };
+
+        async function loadAssignment() {
+            try {
+                const a = await API.get("/assignment/" + assignmentId);
+                document.getElementById("assignmentName").innerText = a.name;
+                document.getElementById("assignmentDetails").innerText = `Type: ${a.questionType} | Questions: ${a.questionCount}`;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadClasses() {
+            try {
+                const [myClasses, assignedClasses] = await Promise.all([
+                    API.get("/class/my"),
+                    API.get("/assignment/classes/" + assignmentId)
+                ]);
+
+                const assignedIds = new Set(assignedClasses.map(c => c.id));
+                const container = document.getElementById("classList");
+                container.innerHTML = "";
+
+                myClasses.forEach(c => {
+                    const isAssigned = assignedIds.has(c.id);
+                    const card = document.createElement("div");
+                    card.className = "class-card";
+                    card.innerHTML = `
+                        <h3>${c.name}</h3>
+                        <p>Code: ${c.classCode}</p>
+                        <div class="class-actions">
+                            <button id="btn-${c.id}" 
+                                    class="${isAssigned ? 'success-btn' : ''}" 
+                                    onclick="toggleAssign(${c.id})" 
+                                    ${isAssigned ? 'disabled' : ''}>
+                                ${isAssigned ? 'Assigned' : 'Assign'}
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function toggleAssign(classId) {
+            try {
+                await API.post("/assignment/assign-to-class", {
+                    assignmentId: parseInt(assignmentId),
+                    classId: classId
+                });
+                alert("Assigned successfully");
+                loadClasses();
+            } catch (err) {
+                alert(err.message || "Failed to assign");
+            }
+        }
+    </script>
+</body>
+</html>

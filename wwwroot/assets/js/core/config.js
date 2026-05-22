@@ -1,7 +1,5 @@
 const CONFIG = {
-    API_BASE: window.location.hostname === "localhost"
-        ? "https://localhost:7225/api"
-        : "/api",
+    API_BASE: window.location.origin + "/api",
 
     ROLES: {
         TEACHER: "teacher",

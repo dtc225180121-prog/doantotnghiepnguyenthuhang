@@ -18,16 +18,16 @@ document.getElementById("role").value;
 
 
 if(!Validator.name(name))
-return alert("Invalid name");
+return alert("Invalid name: Must be 2-50 characters.");
 
 if(!Validator.email(email))
-return alert("Invalid email");
+return alert("Invalid email format.");
 
 if(!Validator.phone(phone))
-return alert("Invalid phone");
+return alert("Invalid phone: Must be 10-11 digits.");
 
 if(!Validator.password(password))
-return alert("Invalid password");
+return alert("Invalid password: Must be 6-50 characters.");
 
 
 try

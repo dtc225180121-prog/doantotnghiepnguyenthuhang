@@ -87,6 +87,23 @@ return await response.json();
 
 return await response.text();
 
+},
+
+// Helpers
+async get(endpoint) {
+    return this.request(endpoint, "GET");
+},
+
+async post(endpoint, body) {
+    return this.request(endpoint, "POST", body);
+},
+
+async put(endpoint, body) {
+    return this.request(endpoint, "PUT", body);
+},
+
+async delete(endpoint) {
+    return this.request(endpoint, "DELETE");
 }
 
 };

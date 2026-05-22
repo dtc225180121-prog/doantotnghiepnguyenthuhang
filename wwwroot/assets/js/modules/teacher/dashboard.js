@@ -14,7 +14,7 @@ async function loadStats() {
         const assignments = await API.get("/assignment/my");
         document.getElementById("totalAssignments").innerText = assignments.length;
 
-        const students = await API.get("/student/my");
+        const students = await API.get("/class/all-students");
         document.getElementById("totalStudents").innerText = students.length;
 
         const submissions = await API.get("/submission/my");

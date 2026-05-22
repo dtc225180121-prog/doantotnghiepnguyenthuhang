@@ -2,6 +2,6 @@
 {
     public class JoinClassDTO
     {
-        public string ClassCode { get; set; }
+        public string ClassCode { get; set; } = default!;
     }
 }

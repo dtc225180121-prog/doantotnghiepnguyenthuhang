@@ -11,7 +11,7 @@ namespace aoe.Controllers
 
     [ApiController]
     [Route("api/assignment")]
-    [Authorize(Roles = "teacher")]
+    [Authorize]
     public class AssignmentController : ControllerBase
     {
         private readonly AoeDbContext _context;
@@ -22,7 +22,6 @@ namespace aoe.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public IActionResult GetById(int id)
         {
             var assignment = _context.Assignments.FirstOrDefault(x => x.Id == id);
@@ -93,6 +92,7 @@ namespace aoe.Controllers
 
         // LIST
         [HttpGet("my-assignments")]
+        [Authorize(Roles = "teacher")]
         public IActionResult MyAssignments(
             string? keyword)
         {
@@ -108,9 +108,47 @@ namespace aoe.Controllers
             return Ok(query.ToList());
         }
 
+        // ALIAS FOR MY-ASSIGNMENTS
+        [HttpGet("my")]
+        [Authorize(Roles = "teacher")]
+        public IActionResult MyAssignmentsAlias(string? keyword)
+        {
+            return MyAssignments(keyword);
+        }
+
+        // LIST FOR STUDENT
+        [HttpGet("student")]
+        [Authorize(Roles = "student")]
+        public IActionResult StudentAssignments()
+        {
+            var studentId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
+            );
+
+            var assignments =
+                from cs in _context.ClassStudents
+                join ac in _context.AssignmentClasses
+                    on cs.ClassId equals ac.ClassId
+                join a in _context.Assignments
+                    on ac.AssignmentId equals a.Id
+                where cs.StudentId == studentId
+                select new
+                {
+                    a.Id,
+                    a.Name,
+                    a.QuestionType,
+                    a.QuestionCount,
+                    a.OpenTime,
+                    a.CloseTime
+                };
+
+            return Ok(assignments.ToList());
+        }
+
 
         // UPDATE
         [HttpPut("update/{id}")]
+        [Authorize(Roles = "teacher")]
         public IActionResult Update(
             int id,
             CreateAssignmentDTO dto)
@@ -143,6 +181,7 @@ namespace aoe.Controllers
 
         // DELETE
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "teacher")]
         public IActionResult Delete(int id)
         {
             var assignment =
@@ -162,6 +201,7 @@ namespace aoe.Controllers
 
         // ASSIGN → CLASS
         [HttpPost("assign-to-class")]
+        [Authorize(Roles = "teacher")]
         public IActionResult AssignToClass(
 AssignToClassDTO dto)
         {
@@ -206,6 +246,7 @@ AssignToClassDTO dto)
 
         // LIST CLASSES OF ASSIGNMENT
         [HttpGet("classes/{assignmentId}")]
+        [Authorize(Roles = "teacher")]
         public IActionResult Classes(
             int assignmentId)
         {

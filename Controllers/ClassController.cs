@@ -25,7 +25,7 @@ namespace aoe.Controllers
             return int.Parse(
                 User.FindFirstValue(
                     ClaimTypes.NameIdentifier
-                )
+                ) ?? "0"
             );
         }
 
@@ -124,6 +124,29 @@ namespace aoe.Controllers
             }
 
             return Ok(query.ToList());
+        }
+
+        [HttpGet("my")]
+        public IActionResult MyClassesAlias(string? keyword)
+        {
+            return MyClasses(keyword);
+        }
+
+        [HttpGet("all-students")]
+        public IActionResult AllStudents()
+        {
+            var teacherId = GetTeacherId();
+
+            var studentIds = _context.Classes
+                .Where(c => c.TeacherId == teacherId)
+                .Join(_context.ClassStudents,
+                      c => c.Id,
+                      cs => cs.ClassId,
+                      (c, cs) => cs.StudentId)
+                .Distinct()
+                .ToList();
+
+            return Ok(studentIds);
         }
 
 

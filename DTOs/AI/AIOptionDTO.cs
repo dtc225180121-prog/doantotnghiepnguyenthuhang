@@ -2,8 +2,8 @@
 {
     public class AIOptionDTO
     {
-        public string Label { get; set; }
+        public string Label { get; set; } = default!;
 
-        public string Content { get; set; }
+        public string Content { get; set; } = default!;
     }
 }

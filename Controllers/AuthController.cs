@@ -32,11 +32,11 @@ namespace aoe.Controllers
                 if (dto == null)
                     return BadRequest("Invalid request");
 
-                dto.Name = dto.Name?.Trim();
-                dto.Email = dto.Email?.Trim().ToLower();
-                dto.Phone = dto.Phone?.Trim();
-                dto.Password = dto.Password?.Trim();
-                dto.Role = dto.Role?.Trim().ToLower();
+                dto.Name = dto.Name!.Trim();
+                dto.Email = dto.Email!.Trim().ToLower();
+                dto.Phone = dto.Phone!.Trim();
+                dto.Password = dto.Password!.Trim();
+                dto.Role = dto.Role!.Trim().ToLower();
 
                 if (!ValidationHelper.ValidEmail(dto.Email))
                     return BadRequest("Invalid email");
@@ -85,8 +85,8 @@ namespace aoe.Controllers
             if (dto == null)
                 return BadRequest("Invalid request");
 
-            dto.Email = dto.Email?.Trim().ToLower();
-            dto.Password = dto.Password?.Trim();
+            dto.Email = dto.Email.Trim().ToLower();
+            dto.Password = dto.Password.Trim();
 
             var user = _context.Users
                 .FirstOrDefault(x => x.Email == dto.Email);
@@ -130,7 +130,7 @@ namespace aoe.Controllers
             var key =
                 new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(
-                        _config["Jwt:Key"]
+                        _config["Jwt:Key"] ?? "secret_key"
                     )
                 );
 
@@ -148,7 +148,7 @@ namespace aoe.Controllers
                     expires:
                         DateTime.Now.AddMinutes(
                             Convert.ToDouble(
-                                _config["Jwt:ExpireMinutes"]
+                                _config["Jwt:ExpireMinutes"] ?? "120"
                             )
                         ),
                     signingCredentials: creds

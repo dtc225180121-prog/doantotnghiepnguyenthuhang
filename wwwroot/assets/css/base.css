@@ -1,38 +1,87 @@
-/* Reset + base */
+/* ===== ELITE MINIMALIST LIGHT - BASE ===== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-body: #f6f5f3;
+  --bg-card: #ffffff;
+  --primary: #6b21a8; /* deep purple */
+  --primary-dark: #4c1d95;
+  --secondary: #d4af37; /* soft gold */
+  --text-dark: #0f172a;
+  --text-gray: #5b6770;
+  --border: #ece6dd;
+  
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 12px 30px -12px rgba(15, 23, 42, 0.06);
+  --shadow-hover: 0 18px 40px -12px rgba(75, 21, 125, 0.10);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f1f5f9;
-  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-body);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Scroll */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5f5;
-  border-radius: 10px;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-/* Button */
+/* Typography */
+h1, h2, h3 { color: var(--text-dark); font-weight: 800; letter-spacing: -0.03em; }
+
+/* Premium Buttons */
 button {
-  background: #2563eb;
+  background: linear-gradient(135deg, rgba(107,33,168,0.95), rgba(212,175,55,0.95));
   color: white;
   border: none;
-  padding: 6px 12px;
-  margin: 4px 0;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s;
-}
-button:hover {
-  background: #1d4ed8;
+  transition: all 0.28s cubic-bezier(0.2, 0.9, 0.2, 1);
+  box-shadow: 0 8px 20px -12px rgba(16,24,40,0.08), 0 2px 0 rgba(0,0,0,0.03) inset;
 }
 
-/* Input */
+button:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+button.secondary-btn, .btn-secondary {
+  background: #fff;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 18px -12px rgba(15,23,42,0.04);
+}
+
+button.secondary-btn:hover {
+  background: var(--bg-body);
+  border-color: rgba(15,23,42,0.06);
+  box-shadow: var(--shadow);
+}
+
+/* Elite Inputs */
 input, select {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
+  background: white;
+  border: 2px solid var(--border);
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: var(--text-dark);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }

@@ -105,7 +105,7 @@ function renderHistory(list) {
 function goMenu() {
 
     location.href =
-        "/pages/student/exam-menu.html?assignmentId="
+        "/pages/student/assignment-menu.html?assignmentId="
         + assignmentId;
 }
 

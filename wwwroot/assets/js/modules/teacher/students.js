@@ -100,12 +100,12 @@ function renderStudents(students)
 
         tr.innerHTML = `
             <td class="select-cell" style="display:none;">
-                <input type="checkbox" value="${s.studentId}">
+                <input type="checkbox" value="${s.id}">
             </td>
             <td>${s.name}</td>
             <td>${s.email}</td>
             <td>
-                <button onclick="removeStudent(${s.studentId})">
+                <button onclick="removeStudent(${s.id})">
                     Remove
                 </button>
             </td>
@@ -117,34 +117,45 @@ function renderStudents(students)
 
 async function addStudent()
 {
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value.trim();
 
-const email =
-document
-.getElementById("email")
-.value
-.trim();
+    if(!email) return;
 
+    try {
+        await API.request(
+            "/class/add-student",
+            "POST",
+            {
+                classId: parseInt(classId),
+                email
+            }
+        );
 
-if(!email)
-return;
-
-
-await API.request(
-
-"/class/add-student",
-
-"POST",
-
-{
-classId,
-email
+        alert("Added student successfully");
+        emailInput.value = "";
+        loadStudents();
+    }
+    catch(err) {
+        console.error(err);
+        alert(err.message || "Failed to add student. Ensure the email is registered as a student account.");
+    }
 }
 
-);
+async function removeStudent(studentId) {
+    if(!confirm("Remove this student from class?")) return;
 
-
-loadStudents();
-
+    try {
+        await API.request(
+            `/class/remove-student/${studentId}/${classId}`,
+            "DELETE"
+        );
+        loadStudents();
+    }
+    catch(err) {
+        console.error(err);
+        alert(err.message || "Failed to remove student.");
+    }
 }
 
 async function removeSelected()
@@ -158,17 +169,22 @@ async function removeSelected()
 
     if (!confirm("Remove selected students?")) return;
 
-    for (let cb of checked)
-    {
-        const studentId = cb.value;
+    try {
+        for (let cb of checked)
+        {
+            const studentId = cb.value;
 
-        await API.request(
-            `/class/remove-student/${studentId}/${classId}`,
-            "DELETE"
-        );
+            await API.request(
+                `/class/remove-student/${studentId}/${classId}`,
+                "DELETE"
+            );
+        }
+        loadStudents();
     }
-
-    loadStudents();
+    catch(err) {
+        console.error(err);
+        alert(err.message || "Failed to remove some students.");
+    }
 }
 
 let bulkMode = false;

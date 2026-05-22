@@ -65,7 +65,7 @@ namespace aoe.Controllers
             };
 
             var teacherId =
-                int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
 
             if (assignment.TeacherId != teacherId)
                 return Unauthorized("Not your assignment");

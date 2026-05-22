@@ -2,28 +2,27 @@ const Validator = {
 
 email(email) {
 
-return /^[a-zA-Z0-9._%+-]{1,20}@gmail\.com$/
+return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 .test(email);
 
 },
 
 phone(phone) {
 
-return /^[0-9]{1,11}$/
+return /^[0-9]{10,11}$/
 .test(phone);
 
 },
 
 name(name) {
 
-return /^[^\s]{1,25}$/
-.test(name);
+return name && name.length >= 2 && name.length <= 50;
 
 },
 
 password(password) {
 
-return /^[^\s]{1,20}$/
+return /^.{6,50}$/
 .test(password);
 
 },

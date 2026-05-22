@@ -96,7 +96,7 @@ async function loadAssignments() {
 
 // ================= ACTION =================
 function startExam(id) {
-    location.href = `/pages/student/take-exam.html?assignmentId=${id}`;
+    location.href = `/pages/student/exam.html?assignmentId=${id}`;
 }
 
 function review(id) {

@@ -24,7 +24,7 @@ namespace aoe.Controllers
             return int.Parse(
                 User.FindFirstValue(
                     ClaimTypes.NameIdentifier
-                )
+                ) ?? "0"
             );
         }
 
@@ -49,7 +49,7 @@ namespace aoe.Controllers
         {
             // ===== LẤY STUDENT ID =====
             var studentId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
             );
 
             // ===== CHECK STUDENT THUỘC CLASS CÓ ASSIGNMENT =====
