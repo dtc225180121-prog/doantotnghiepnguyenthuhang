@@ -190,7 +190,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 // ======================
-// 🔥 MIGRATION DEBUG (QUAN TRỌNG)
+// DATABASE MIGRATION
+// Keep startup resilient on cloud hosts: a temporary DB issue should not
+// prevent the web app from starting and serving static pages.
 // ======================
 using (var scope = app.Services.CreateScope())
 {
@@ -199,16 +201,12 @@ using (var scope = app.Services.CreateScope())
     try
     {
         Console.WriteLine("🔥 START MIGRATION");
-
-        db.Database.OpenConnection();
-        Console.WriteLine("✅ DB CONNECTED");
-
         db.Database.Migrate();
         Console.WriteLine("✅ MIGRATION DONE");
     }
     catch (Exception ex)
     {
-        Console.WriteLine("❌ MIGRATION ERROR: " + ex.ToString());
+        Console.WriteLine("❌ MIGRATION ERROR: " + ex.Message);
     }
 }
 
