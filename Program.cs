@@ -189,6 +189,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => Results.Redirect("/pages/auth/login.html"));
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
+
+app.MapFallbackToFile("/index.html");
+
 // ======================
 // DATABASE MIGRATION
 // Keep startup resilient on cloud hosts: a temporary DB issue should not
