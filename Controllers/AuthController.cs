@@ -72,6 +72,11 @@ namespace aoe.Controllers
 
                 return Ok(new { message = "Registered successfully" });
             }
+            catch (Exception ex) when (IsDatabaseUnavailable(ex))
+            {
+                Console.WriteLine("REGISTER DB UNAVAILABLE: " + ex);
+                return StatusCode(503, new { error = "Database is unavailable" });
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("REGISTER ERROR: " + ex.Message);
@@ -82,34 +87,48 @@ namespace aoe.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginDTO dto)
         {
-            if (dto == null)
-                return BadRequest("Invalid request");
-
-            dto.Email = dto.Email.Trim().ToLower();
-            dto.Password = dto.Password.Trim();
-
-            var user = _context.Users
-                .FirstOrDefault(x => x.Email == dto.Email);
-
-            if (user == null)
-                return Unauthorized(new
-                {
-                    message = "Email not found"
-                });
-
-            if (user.Password != dto.Password)
-                return Unauthorized(new
-                {
-                    message = "Wrong password"
-                });
-
-            var token = GenerateToken(user);
-
-            return Ok(new
+            try
             {
-                token,
-                role = user.Role
-            });
+                if (dto == null)
+                    return BadRequest("Invalid request");
+
+                dto.Email = dto.Email.Trim().ToLower();
+                dto.Password = dto.Password.Trim();
+
+                var user = _context.Users
+                    .FirstOrDefault(x => x.Email == dto.Email);
+
+                if (user == null)
+                    return Unauthorized(new
+                    {
+                        message = "Email not found"
+                    });
+
+                if (user.Password != dto.Password)
+                    return Unauthorized(new
+                    {
+                        message = "Wrong password"
+                    });
+
+                var token = GenerateToken(user);
+
+                return Ok(new
+                {
+                    token,
+                    role = user.Role.Trim().ToLower()
+                });
+            }
+            catch (Exception ex) when (IsDatabaseUnavailable(ex))
+            {
+                Console.WriteLine("LOGIN DB UNAVAILABLE: " + ex);
+                return StatusCode(503, new { error = "Database is unavailable" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("LOGIN ERROR: " + ex);
+                return StatusCode(500, new { error = ex.Message });
+            }
+
         }
 
         private string GenerateToken(User user)
@@ -156,6 +175,20 @@ namespace aoe.Controllers
 
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);
+        }
+
+        private static bool IsDatabaseUnavailable(Exception ex)
+        {
+            if (ex is Microsoft.EntityFrameworkCore.Storage.RetryLimitExceededException)
+                return true;
+
+            if (ex is Npgsql.NpgsqlException)
+                return true;
+
+            if (ex.InnerException != null)
+                return IsDatabaseUnavailable(ex.InnerException);
+
+            return false;
         }
     }
 }
