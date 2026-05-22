@@ -12,12 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ======================
 // 🔥 FIX ENV CONNECTION STRING (QUAN TRỌNG NHẤT)
+// Prefer cloud env vars in production; only fall back to localhost for local dev.
 // ======================
 var connStr =
-    builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? builder.Configuration["ConnectionStrings__DefaultConnection"]
+    builder.Configuration["ConnectionStrings__DefaultConnection"]
     ?? builder.Configuration["CUSTOM_CONNECTION"]
-    ?? NormalizeDatabaseUrl(builder.Configuration["DATABASE_URL"]);
+    ?? NormalizeDatabaseUrl(builder.Configuration["DATABASE_URL"])
+    ?? (builder.Environment.IsDevelopment()
+        ? builder.Configuration.GetConnectionString("DefaultConnection")
+        : null);
 
 Console.WriteLine("🔥 CONN RAW: " + connStr);
 Console.WriteLine("🔥 JWT KEY: " + builder.Configuration["Jwt:Key"]);
