@@ -31,17 +31,23 @@ src="../../assets/js/modules/auth/login.js">
 
 <h2>English Hub Login</h2>
 
-<input id="email" placeholder="Email">
+<form id="loginForm">
 
-<input id="password" type="password" placeholder="Password">
+<input id="email" type="email" placeholder="Email" required>
 
-<button onclick="login()">Login</button>
+<input id="password" type="password" placeholder="Password" required>
+
+<button id="loginBtn" type="submit">Login</button>
 
 <button onclick="Router.goRegister()"
 class="secondary-btn">
 
 Register
 </button>
+
+<div id="loginStatus" style="margin-top:14px;font-size:14px;color:#fde68a;min-height:20px"></div>
+
+</form>
 
 </div>
 

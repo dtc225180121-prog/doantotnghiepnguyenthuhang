@@ -1,6 +1,12 @@
 async function login() {
 
+    const status = document.getElementById("loginStatus");
+    const button = document.getElementById("loginBtn");
+
     try {
+
+        if (status) status.textContent = "Logging in...";
+        if (button) button.disabled = true;
 
         const email =
             document
@@ -36,8 +42,35 @@ async function login() {
 
         console.error(err);
 
-        alert(err.message || "Login failed: Please check your credentials.");
+        const message = err?.message || "Login failed: Please check your credentials.";
+        if (status) status.textContent = message;
+        alert(message);
+
+    }
+
+    finally {
+
+        if (button) button.disabled = false;
 
     }
 
 }
+
+window.login = login;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("loginForm");
+
+    if (form) {
+
+        form.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+            login();
+
+        });
+
+    }
+
+});
