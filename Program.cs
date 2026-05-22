@@ -189,10 +189,35 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/", () => Results.Redirect("/pages/auth/login.html"));
-app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
+app.MapGet("/", () => Results.Content(@"<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>English Hub</title>
+    <style>
+        body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111827;color:#fff;font-family:Arial,sans-serif}
+        .card{max-width:560px;padding:32px 28px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.28)}
+        h1{margin:0 0 12px;font-size:32px}
+        p{margin:0 0 18px;line-height:1.6;color:#d1d5db}
+        a{color:#fbbf24;text-decoration:none;font-weight:700}
+        .links{display:flex;gap:12px;flex-wrap:wrap}
+        .btn{display:inline-block;padding:12px 16px;border-radius:12px;background:#6b21a8;color:#fff}
+    </style>
+</head>
+<body>
+    <div class='card'>
+        <h1>English Hub</h1>
+        <p>The service is running. Open the login page below to use the app.</p>
+        <div class='links'>
+            <a class='btn' href='/pages/auth/login.html'>Open Login</a>
+            <a href='/healthz'>Health Check</a>
+        </div>
+    </div>
+</body>
+</html>", "text/html"));
 
-app.MapFallbackToFile("/index.html");
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 
 // ======================
 // DATABASE MIGRATION
