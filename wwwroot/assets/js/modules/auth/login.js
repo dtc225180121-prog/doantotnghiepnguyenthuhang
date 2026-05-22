@@ -32,7 +32,7 @@ async function login() {
 
         Storage.setToken(response.token);
 
-        Storage.setRole(response.role);
+        Storage.setRole(String(response.role || "").trim().toLowerCase());
 
         Router.redirectByRole();
 
@@ -61,6 +61,7 @@ window.login = login;
 document.addEventListener("DOMContentLoaded", () => {
 
     const form = document.getElementById("loginForm");
+    const button = document.getElementById("loginBtn");
 
     if (form) {
 
@@ -70,6 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
             login();
 
         });
+
+    }
+
+    if (button) {
+
+        button.addEventListener("click", () => login());
 
     }
 
