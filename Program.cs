@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using System.Security.Claims;
 using System.Text;
 
@@ -15,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connStr =
     builder.Configuration.GetConnectionString("DefaultConnection")
     ?? builder.Configuration["ConnectionStrings__DefaultConnection"]
-    ?? builder.Configuration["CUSTOM_CONNECTION"];
+    ?? builder.Configuration["CUSTOM_CONNECTION"]
+    ?? NormalizeDatabaseUrl(builder.Configuration["DATABASE_URL"]);
 
 Console.WriteLine("🔥 CONN RAW: " + connStr);
 Console.WriteLine("🔥 JWT KEY: " + builder.Configuration["Jwt:Key"]);
@@ -242,3 +244,40 @@ using (var scope = app.Services.CreateScope())
 
 // ======================
 app.Run();
+
+static string? NormalizeDatabaseUrl(string? databaseUrl)
+{
+    if (string.IsNullOrWhiteSpace(databaseUrl))
+    {
+        return null;
+    }
+
+    if (!Uri.TryCreate(databaseUrl, UriKind.Absolute, out var uri))
+    {
+        return databaseUrl;
+    }
+
+    if (!string.Equals(uri.Scheme, "postgres", StringComparison.OrdinalIgnoreCase) &&
+        !string.Equals(uri.Scheme, "postgresql", StringComparison.OrdinalIgnoreCase))
+    {
+        return databaseUrl;
+    }
+
+    var builder = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.IsDefaultPort ? 5432 : uri.Port,
+        Username = Uri.UnescapeDataString(uri.UserInfo.Split(':')[0]),
+        Password = uri.UserInfo.Contains(':')
+            ? Uri.UnescapeDataString(uri.UserInfo.Split(':', 2)[1])
+            : string.Empty,
+        Database = uri.AbsolutePath.Trim('/')
+    };
+
+    if (uri.Query.Contains("sslmode=require", StringComparison.OrdinalIgnoreCase))
+    {
+        builder.SslMode = SslMode.Require;
+    }
+
+    return builder.ConnectionString;
+}
