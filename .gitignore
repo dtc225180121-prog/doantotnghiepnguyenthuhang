@@ -2,6 +2,7 @@
 .vs/
 bin/
 obj/
+*.db
 
 # User files
 *.user

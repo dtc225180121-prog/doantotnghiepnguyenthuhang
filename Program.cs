@@ -16,10 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // ======================
 var connStr =
     Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("SUPABASE_DB_URL"))
     ?? Environment.GetEnvironmentVariable("CUSTOM_CONNECTION")
     ?? NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL"))
-    ?? builder.Configuration["ConnectionStrings:DefaultConnection"]
-    ?? builder.Configuration["ConnectionStrings__DefaultConnection"]
     ?? (builder.Environment.IsDevelopment()
         ? builder.Configuration.GetConnectionString("DefaultConnection")
         : null);
