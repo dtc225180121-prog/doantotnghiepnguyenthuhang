@@ -241,7 +241,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        Console.WriteLine("❌ MIGRATION ERROR: " + ex.Message);
+        Console.WriteLine("❌ MIGRATION ERROR: " + ex);
     }
 }
 
@@ -274,12 +274,14 @@ static string? NormalizeDatabaseUrl(string? databaseUrl)
         Password = uri.UserInfo.Contains(':')
             ? Uri.UnescapeDataString(uri.UserInfo.Split(':', 2)[1])
             : string.Empty,
-        Database = uri.AbsolutePath.Trim('/')
+        Database = uri.AbsolutePath.Trim('/'),
+        SslMode = SslMode.Require,
+        IncludeErrorDetail = true
     };
 
-    if (uri.Query.Contains("sslmode=require", StringComparison.OrdinalIgnoreCase))
+    if (uri.Query.Contains("sslmode=disable", StringComparison.OrdinalIgnoreCase))
     {
-        builder.SslMode = SslMode.Require;
+        builder.SslMode = SslMode.Disable;
     }
 
     return builder.ConnectionString;
