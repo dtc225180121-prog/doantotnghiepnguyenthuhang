@@ -144,7 +144,7 @@ async function submitQuestion()
         if(!optionA || !optionB || !optionC || !optionD)
             return alert("All options required");
 
-        correctAnswer = document.getElementById("correctAnswer").value;
+        correctAnswer = document.getElementById("correctAnswer").value.trim().toUpperCase();
     }
     else
     {

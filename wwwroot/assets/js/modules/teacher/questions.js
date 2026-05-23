@@ -92,7 +92,7 @@ async function createQuestion() {
                 return alert("All options required");
 
             payload.correctAnswer =
-                document.getElementById("correctAnswer").value;
+                document.getElementById("correctAnswer").value.trim().toUpperCase();
 
             const q = await API.request("/question/create", "POST", payload);
 
@@ -226,7 +226,7 @@ async function saveEdit() {
 
         if (assignmentType === "single_choice") {
             correctAnswer =
-                document.getElementById("editCorrect").value;
+                document.getElementById("editCorrect").value.trim().toUpperCase();
         } else {
             correctAnswer =
                 document.getElementById("editFill").value.trim();
