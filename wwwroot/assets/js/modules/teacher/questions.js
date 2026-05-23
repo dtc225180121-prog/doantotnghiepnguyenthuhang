@@ -54,6 +54,14 @@ function showSkeleton() {
     `;
 }
 
+// ===== TOGGLE CREATE =====
+function toggleCreate() {
+    const createBox = document.getElementById("createBox");
+    const isHidden = createBox.style.display === "none";
+
+    createBox.style.display = isHidden ? "block" : "none";
+}
+
 // ===== CREATE =====
 async function createQuestion() {
     if (currentQuestions.length >= assignmentInfo.questionCount) {
