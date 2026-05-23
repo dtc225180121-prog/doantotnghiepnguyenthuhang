@@ -43,3 +43,18 @@ https://english-hub-aoe.vercel.app
 ```
 
 Register and login should work when `/healthz/db` reports that the database is connected.
+
+## 4. GitHub Actions CI/CD
+
+This repository also includes automated CI/CD in [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml).
+
+- On every pull request to `main`, it builds the backend and the frontend.
+- On every push to `main`, it builds first and then triggers deploy hooks if they are configured.
+
+Required GitHub secrets:
+
+- `RENDER_DEPLOY_HOOK_URL` for the backend deploy hook.
+- `VERCEL_DEPLOY_HOOK_URL` for the frontend deploy hook.
+- `API_ORIGIN` if you want the frontend build to inject a different backend URL.
+
+If you do not set the deploy hook secrets yet, the CI build still runs and the deploy job skips safely.
