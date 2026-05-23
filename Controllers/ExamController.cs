@@ -28,19 +28,61 @@ namespace aoe.Controllers
             );
         }
 
+        private bool StudentHasClassAccess(int classId)
+        {
+            var studentId = GetStudentId();
+
+            return _context.ClassStudents.Any(cs =>
+                cs.ClassId == classId &&
+                cs.StudentId == studentId);
+        }
+
+        private bool StudentHasAssignmentAccess(int assignmentId)
+        {
+            var studentId = GetStudentId();
+
+            return (
+                from ac in _context.AssignmentClasses
+                join cs in _context.ClassStudents
+                    on ac.ClassId equals cs.ClassId
+                where ac.AssignmentId == assignmentId &&
+                      cs.StudentId == studentId
+                select ac
+            ).Any();
+        }
+
 
         // LIST ASSIGNMENTS OF CLASS
         [HttpGet("assignments/{classId}")]
         public IActionResult Assignments(int classId)
         {
+            if (!StudentHasClassAccess(classId))
+                return Unauthorized();
+
+            var studentId = GetStudentId();
+
             var assignments =
                 from ac in _context.AssignmentClasses
                 join a in _context.Assignments
                 on ac.AssignmentId equals a.Id
                 where ac.ClassId == classId
-                select a;
+                orderby a.OpenTime descending
+                select new
+                {
+                    a.Id,
+                    a.Name,
+                    a.QuestionType,
+                    a.QuestionCount,
+                    a.OpenTime,
+                    a.CloseTime,
+                    a.ShowResult,
+                    a.ShowExplanation,
+                    Submitted = _context.Results.Any(r =>
+                        r.AssignmentId == a.Id &&
+                        r.StudentId == studentId)
+                };
 
-            return Ok(assignments);
+            return Ok(assignments.ToList());
         }
 
         [HttpGet("state/{assignmentId}")]
@@ -53,17 +95,7 @@ namespace aoe.Controllers
             );
 
             // ===== CHECK STUDENT THUỘC CLASS CÓ ASSIGNMENT =====
-            bool hasAccess =
-            (
-                from ac in _context.AssignmentClasses
-                join cs in _context.ClassStudents
-                    on ac.ClassId equals cs.ClassId
-                where ac.AssignmentId == assignmentId
-                && cs.StudentId == studentId
-                select ac
-            ).Any();
-
-            if (!hasAccess)
+            if (!StudentHasAssignmentAccess(assignmentId))
                 return Unauthorized();
 
             // ===== LẤY ASSIGNMENT =====
@@ -111,6 +143,9 @@ namespace aoe.Controllers
             if (assignment == null)
                 return NotFound();
 
+            if (!StudentHasAssignmentAccess(assignmentId))
+                return Unauthorized();
+
             if (assignment.OpenTime != null &&
                 DateTime.Now < assignment.OpenTime)
                 return BadRequest("Not open yet");
@@ -151,7 +186,13 @@ namespace aoe.Controllers
         [HttpPost("submit")]
         public IActionResult SubmitExam(SubmitExamDTO dto)
         {
+            if (dto == null || dto.Answers == null)
+                return BadRequest("Invalid payload");
+
             var studentId = GetStudentId();
+
+            if (!StudentHasAssignmentAccess(dto.AssignmentId))
+                return Unauthorized();
 
             double totalScore = 0;
 
@@ -162,7 +203,8 @@ namespace aoe.Controllers
                 var question =
                     _context.Questions.Find(ans.QuestionId);
 
-                if (question == null)
+                if (question == null ||
+                    question.AssignmentId != dto.AssignmentId)
                     continue;
 
                 string dbAnswer =
@@ -226,7 +268,8 @@ namespace aoe.Controllers
                 {
                     StudentId = studentId,
                     AssignmentId = dto.AssignmentId,
-                    Score = totalScore
+                    Score = totalScore,
+                    SubmittedAt = DateTime.UtcNow
                 }
             );
 
@@ -248,13 +291,16 @@ namespace aoe.Controllers
                 GetStudentId();
 
             var result =
-                _context.Results.FirstOrDefault(
+                _context.Results
+                .Where(
                     x =>
                         x.StudentId ==
                         studentId &&
                         x.AssignmentId ==
                         assignmentId
-                );
+                )
+                .OrderByDescending(x => x.SubmittedAt ?? DateTime.MinValue)
+                .FirstOrDefault();
 
             if (result == null)
                 return NotFound();
@@ -268,6 +314,9 @@ namespace aoe.Controllers
         public IActionResult History(int assignmentId)
         {
             var studentId = GetStudentId();
+
+            if (!StudentHasAssignmentAccess(assignmentId))
+                return Unauthorized();
 
             var history =
                 _context.Results

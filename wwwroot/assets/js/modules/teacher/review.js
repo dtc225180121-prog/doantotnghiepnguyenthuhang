@@ -9,7 +9,7 @@ window.onload = async () =>
 
     const data =
         await API.request(
-            `/exam/review/${assignmentId}/${studentId}`
+            `/result/review/${assignmentId}/${studentId}`
         );
 
     render(data);

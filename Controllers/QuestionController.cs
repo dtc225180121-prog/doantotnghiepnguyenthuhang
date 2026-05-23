@@ -73,6 +73,9 @@ namespace aoe.Controllers
             if (string.IsNullOrWhiteSpace(dto.Content))
                 return BadRequest("Content required");
 
+            if (string.IsNullOrWhiteSpace(dto.CorrectAnswer))
+                return BadRequest("Correct answer required");
+
             if (dto.Type == "fill_blank")
             {
                 if (!System.Text.RegularExpressions.Regex
@@ -121,6 +124,13 @@ namespace aoe.Controllers
 
             if (question.Type != "single_choice")
                 return BadRequest("Only single_choice");
+
+            var existingOptions = _context.QuestionOptions
+                .Where(o => o.QuestionId == dto.QuestionId)
+                .ToList();
+
+            if (existingOptions.Any())
+                _context.QuestionOptions.RemoveRange(existingOptions);
 
             var options = new List<QuestionOption>
             {

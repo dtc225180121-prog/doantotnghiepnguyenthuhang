@@ -26,7 +26,7 @@ async function loadAssignments() {
 
         const assignments =
             await API.request(
-                "/assignment/my-assignments?keyword=" + keyword
+                "/assignment/my-assignments?keyword=" + encodeURIComponent(keyword)
             );
 
         render(assignments);

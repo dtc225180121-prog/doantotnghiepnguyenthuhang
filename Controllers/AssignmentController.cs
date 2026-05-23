@@ -7,7 +7,6 @@ namespace aoe.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Security.Claims;
-    using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
     [ApiController]
     [Route("api/assignment")]
@@ -19,6 +18,29 @@ namespace aoe.Controllers
         public AssignmentController(AoeDbContext context)
         {
             _context = context;
+        }
+
+        private int GetUserId()
+        {
+            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+        }
+
+        private bool OwnsAssignment(int assignmentId)
+        {
+            var teacherId = GetUserId();
+
+            return _context.Assignments.Any(a =>
+                a.Id == assignmentId &&
+                a.TeacherId == teacherId);
+        }
+
+        private bool OwnsClass(int classId)
+        {
+            var teacherId = GetUserId();
+
+            return _context.Classes.Any(c =>
+                c.Id == classId &&
+                c.TeacherId == teacherId);
         }
 
         [HttpGet("{id}")]
@@ -96,7 +118,10 @@ namespace aoe.Controllers
         public IActionResult MyAssignments(
             string? keyword)
         {
-            var query = _context.Assignments.AsQueryable();
+            var teacherId = GetUserId();
+
+            var query = _context.Assignments
+                .Where(x => x.TeacherId == teacherId);
 
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -121,26 +146,33 @@ namespace aoe.Controllers
         [Authorize(Roles = "student")]
         public IActionResult StudentAssignments()
         {
-            var studentId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
-            );
+            var studentId = GetUserId();
 
-            var assignments =
+            var assignmentIds =
                 from cs in _context.ClassStudents
                 join ac in _context.AssignmentClasses
                     on cs.ClassId equals ac.ClassId
-                join a in _context.Assignments
-                    on ac.AssignmentId equals a.Id
                 where cs.StudentId == studentId
-                select new
+                select ac.AssignmentId;
+
+            var assignments =
+                _context.Assignments
+                .Where(a => assignmentIds.Distinct().Contains(a.Id))
+                .OrderByDescending(a => a.OpenTime ?? DateTime.MinValue)
+                .Select(a => new
                 {
                     a.Id,
                     a.Name,
                     a.QuestionType,
                     a.QuestionCount,
                     a.OpenTime,
-                    a.CloseTime
-                };
+                    a.CloseTime,
+                    a.ShowResult,
+                    a.ShowExplanation,
+                    Submitted = _context.Results.Any(r =>
+                        r.AssignmentId == a.Id &&
+                        r.StudentId == studentId)
+                });
 
             return Ok(assignments.ToList());
         }
@@ -205,20 +237,12 @@ namespace aoe.Controllers
         public IActionResult AssignToClass(
 AssignToClassDTO dto)
         {
-            var assignmentExists =
-            _context.Assignments
-            .Any(x => x.Id == dto.AssignmentId);
-
-            if (!assignmentExists)
-                return BadRequest("Assignment not found");
+            if (!OwnsAssignment(dto.AssignmentId))
+                return Unauthorized("Assignment not found or not yours");
 
 
-            var classExists =
-            _context.Classes
-            .Any(x => x.Id == dto.ClassId);
-
-            if (!classExists)
-                return BadRequest("Class not found");
+            if (!OwnsClass(dto.ClassId))
+                return Unauthorized("Class not found or not yours");
 
 
             var exists =
@@ -228,7 +252,7 @@ AssignToClassDTO dto)
             );
 
             if (exists)
-                return BadRequest("Already assigned");
+                return Ok("Already assigned");
 
 
             _context.AssignmentClasses.Add(
@@ -250,6 +274,9 @@ AssignToClassDTO dto)
         public IActionResult Classes(
             int assignmentId)
         {
+            if (!OwnsAssignment(assignmentId))
+                return Unauthorized();
+
             var classes =
                 from ac in _context.AssignmentClasses
                 join c in _context.Classes

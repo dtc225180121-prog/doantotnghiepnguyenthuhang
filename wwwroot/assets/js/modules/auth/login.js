@@ -2,11 +2,18 @@ async function login() {
 
     const status = document.getElementById("loginStatus");
     const button = document.getElementById("loginBtn");
+    const api = window.API;
+    const storage = window.Storage;
+    const router = window.Router;
 
     try {
 
         if (status) status.textContent = "Logging in...";
         if (button) button.disabled = true;
+
+        if (!api || !storage || !router) {
+            throw new Error("Core scripts are not loaded. Refresh the page and check the script paths.");
+        }
 
         const email =
             document
@@ -21,7 +28,7 @@ async function login() {
             .trim();
 
         const response =
-            await API.request(
+            await api.request(
                 "/auth/login",
                 "POST",
                 {
@@ -30,11 +37,11 @@ async function login() {
                 }
             );
 
-        Storage.setToken(response.token);
+        storage.setToken(response.token);
 
-        Storage.setRole(String(response.role || "").trim().toLowerCase());
+        storage.setRole(String(response.role || "").trim().toLowerCase());
 
-        Router.redirectByRole();
+        router.redirectByRole();
 
     }
 

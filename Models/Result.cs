@@ -18,7 +18,7 @@ namespace aoe.Models
         [Column("score")]
         public double Score { get; set; }
 
-        [Column("submitted_at")]
+        [Column("submitted_at", TypeName = "timestamp with time zone")]
         public DateTime? SubmittedAt { get; set; }
 
     }

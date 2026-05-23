@@ -43,11 +43,11 @@ function renderScore(result) {
     let status = "Fail";
     let cls = "fail";
 
-    if (score >= 8) {
+    if (score >= 80) {
         status = "Excellent";
         cls = "excellent";
     }
-    else if (score >= 5) {
+    else if (score >= 50) {
         status = "Pass";
         cls = "pass";
     }
@@ -131,4 +131,7 @@ function backExam() {
 }
 
 // ===== INIT =====
-loadResult();
+window.onload = async () => {
+    renderLayout("student");
+    await loadResult();
+};

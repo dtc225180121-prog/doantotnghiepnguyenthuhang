@@ -1,0 +1,761 @@
+{
+  "schemaVersion": 1,
+  "source": "NEW.docx",
+  "purpose": "Sample data rendered from documented test cases for Selenium/API testing.",
+  "baseUrl": "http://localhost:5041",
+  "seedData": {
+    "teacher": {
+      "name": "hang",
+      "email": "hang2004@gmail.com",
+      "phone": "0338424119",
+      "password": "0338424119",
+      "role": "Teacher"
+    },
+    "student": {
+      "name": "studenttest",
+      "email": "student2004@gmail.com",
+      "phone": "0987654321",
+      "password": "0338424119",
+      "role": "Student"
+    },
+    "existingUserForDuplicateChecks": {
+      "name": "nguyen",
+      "email": "nguyen@gmail.com",
+      "phone": "12345678",
+      "password": "0338424119",
+      "role": "Student"
+    }
+  },
+  "testCases": {
+    "register": [
+      {
+        "id": "REG_01",
+        "title": "Dang ky tai khoan thanh cong",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Register success",
+        "shouldPass": true
+      },
+      {
+        "id": "REG_02",
+        "title": "Dang ky that bai khi bo trong Email",
+        "data": {
+          "name": "hang",
+          "email": "",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Email is required",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_03",
+        "title": "Dang ky that bai khi sai dinh dang Email",
+        "data": {
+          "name": "hang",
+          "email": "hang01",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid email",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_04",
+        "title": "Dang ky that bai khi Email da ton tai",
+        "data": {
+          "name": "hang",
+          "email": "nguyen@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Email already exists",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_05",
+        "title": "Dang ky that bai khi Email qua 20 ky tu",
+        "data": {
+          "name": "hang",
+          "email": "nguyenthuhang04122004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid email",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_06",
+        "title": "Dang ky that bai khi Email co dau cach",
+        "data": {
+          "name": "hang",
+          "email": "hang nguyen@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid email",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_07",
+        "title": "Dang ky that bai khi bo trong Phone",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Phone is required",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_08",
+        "title": "Dang ky that bai khi Phone chua chu",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "meo",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid phone",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_09",
+        "title": "Dang ky that bai khi Phone da ton tai",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "12345678",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Phone already exists",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_10",
+        "title": "Dang ky that bai khi Phone qua 11 ky tu",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0123456789012",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid phone",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_11",
+        "title": "Dang ky that bai khi Password qua 20 ky tu",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "033842411903384241190",
+          "role": "Teacher"
+        },
+        "expected": "Invalid password",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_12",
+        "title": "Dang ky that bai khi bo trong Password",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "",
+          "role": "Teacher"
+        },
+        "expected": "Password is required",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_13",
+        "title": "Dang ky that bai khi Password co dau cach",
+        "data": {
+          "name": "hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424 119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid password",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_14",
+        "title": "Dang ky that bai khi FullName co dau cach",
+        "data": {
+          "name": "thu hang",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid name",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_15",
+        "title": "Dang ky that bai khi FullName co ky tu dac biet",
+        "data": {
+          "name": "@!#$",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid name",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_16",
+        "title": "Dang ky that bai khi FullName qua 25 ky tu",
+        "data": {
+          "name": "hangthunguyenhangnguyenthu",
+          "email": "hang2004@gmail.com",
+          "phone": "0338424119",
+          "password": "0338424119",
+          "role": "Teacher"
+        },
+        "expected": "Invalid name",
+        "shouldPass": false
+      },
+      {
+        "id": "REG_17",
+        "title": "Dang ky that bai khi bo trong tat ca truong",
+        "data": {
+          "name": "",
+          "email": "",
+          "phone": "",
+          "password": "",
+          "role": ""
+        },
+        "expected": "Please fill all fields",
+        "shouldPass": false
+      }
+    ],
+    "login": [
+      {
+        "id": "LOG_01",
+        "title": "Dang nhap thanh cong",
+        "data": {
+          "email": "hang2004@gmail.com",
+          "password": "0338424119"
+        },
+        "expected": "Login success",
+        "shouldPass": true
+      },
+      {
+        "id": "LOG_02",
+        "title": "Dang nhap that bai khi bo trong Email",
+        "data": {
+          "email": "",
+          "password": "0338424119"
+        },
+        "expected": "Email is required",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_03",
+        "title": "Dang nhap that bai khi sai dinh dang Email",
+        "data": {
+          "email": "hang2004gmail.com",
+          "password": "0338424119"
+        },
+        "expected": "Invalid email",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_04",
+        "title": "Dang nhap that bai khi Email chua dang ky",
+        "data": {
+          "email": "hangthunguyen204@gmail.com",
+          "password": "0338424119"
+        },
+        "expected": "Email not found",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_05",
+        "title": "Dang nhap that bai khi Email co dau cach",
+        "data": {
+          "email": "hang2004   @gmail. com",
+          "password": "0338424119"
+        },
+        "expected": "Invalid email",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_06",
+        "title": "Dang nhap that bai khi sai Password",
+        "data": {
+          "email": "hang2004@gmail.com",
+          "password": "0338424"
+        },
+        "expected": "Wrong password",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_07",
+        "title": "Dang nhap that bai khi bo trong Password",
+        "data": {
+          "email": "hang2004@gmail.com",
+          "password": ""
+        },
+        "expected": "Password is required",
+        "shouldPass": false
+      },
+      {
+        "id": "LOG_08",
+        "title": "Dang nhap that bai khi Password co dau cach",
+        "data": {
+          "email": "hang2004@gmail.com",
+          "password": "03 384 24 19"
+        },
+        "expected": "Wrong password",
+        "shouldPass": false
+      }
+    ],
+    "classes": [
+      {
+        "id": "CLS_01",
+        "title": "Them lop hoc thanh cong",
+        "data": {
+          "name": "ielts5"
+        },
+        "expected": "Class created successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "CLS_02",
+        "title": "Them lop hoc that bai khi ten lop qua 20 ky tu",
+        "data": {
+          "name": "ielts5ielts5ielts5ielts5"
+        },
+        "expected": "Invalid class name",
+        "shouldPass": false
+      },
+      {
+        "id": "CLS_03",
+        "title": "Them lop hoc that bai khi ten lop co ky tu dac biet",
+        "data": {
+          "name": "ielts5!0#"
+        },
+        "expected": "Invalid class name",
+        "shouldPass": false
+      },
+      {
+        "id": "CLS_04",
+        "title": "Them lop hoc that bai khi ten lop co dau cach",
+        "data": {
+          "name": "ielts  5.0"
+        },
+        "expected": "Invalid class name",
+        "shouldPass": false
+      },
+      {
+        "id": "CLS_05",
+        "title": "Them lop hoc that bai khi bo trong ten lop",
+        "data": {
+          "name": ""
+        },
+        "expected": "Class name is required",
+        "shouldPass": false
+      }
+    ],
+    "assignments": [
+      {
+        "id": "ASM_01",
+        "title": "Them bai tap thanh cong",
+        "data": {
+          "name": "bai tap",
+          "questionType": "single_choice",
+          "questionCount": 5,
+          "openTime": "2026-04-26T00:00:00",
+          "closeTime": "2026-04-30T23:59:00",
+          "showResult": true,
+          "showExplanation": false
+        },
+        "expected": "Assignment created successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "ASM_02",
+        "title": "Them bai tap that bai khi ten qua 20 ky tu",
+        "data": {
+          "name": "bai tap trac nghiem tieng anh tong hop",
+          "questionType": "fill_blank",
+          "questionCount": 2,
+          "openTime": "2026-04-26T00:00:00",
+          "closeTime": "2026-04-30T23:59:00",
+          "showResult": false,
+          "showExplanation": true
+        },
+        "expected": "Invalid assignment name",
+        "shouldPass": false
+      },
+      {
+        "id": "ASM_03",
+        "title": "Them bai tap that bai khi bo trong ten",
+        "data": {
+          "name": "",
+          "questionType": "single_choice",
+          "questionCount": 1,
+          "openTime": "2026-04-26T00:00:00",
+          "closeTime": "2026-04-30T23:59:00",
+          "showResult": false,
+          "showExplanation": false
+        },
+        "expected": "Assignment name is required",
+        "shouldPass": false
+      },
+      {
+        "id": "ASM_04",
+        "title": "Them bai tap that bai khi ten co ky tu dac biet",
+        "data": {
+          "name": "@#$",
+          "questionType": "fill_blank",
+          "questionCount": 2,
+          "openTime": "2026-04-26T00:00:00",
+          "closeTime": "2026-04-30T23:59:00",
+          "showResult": false,
+          "showExplanation": false
+        },
+        "expected": "Invalid assignment name",
+        "shouldPass": false
+      },
+      {
+        "id": "ASM_05",
+        "title": "Them bai tap that bai khi bo trong Question count",
+        "data": {
+          "name": "bai tap ve nha",
+          "questionType": "fill_blank",
+          "questionCount": 0,
+          "openTime": null,
+          "closeTime": null,
+          "showResult": false,
+          "showExplanation": false
+        },
+        "expected": "Question count must be > 0",
+        "shouldPass": false
+      }
+    ],
+    "singleChoiceQuestions": [
+      {
+        "id": "SCQ_01",
+        "title": "Them cau hoi single choice thanh cong",
+        "data": {
+          "type": "single_choice",
+          "content": "Hom nay la thu may?",
+          "correctAnswer": "D",
+          "explanation": "hom nay la thu bay",
+          "options": {
+            "a": "thuhai",
+            "b": "thu ba",
+            "c": "thu tu",
+            "d": "thubay"
+          }
+        },
+        "expected": "Question created successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "SCQ_02",
+        "title": "Them cau hoi that bai khi thieu mot hoac nhieu option",
+        "data": {
+          "type": "single_choice",
+          "content": "Hom nay la thu may?",
+          "correctAnswer": "A",
+          "explanation": "hom nay la thu hai",
+          "options": {
+            "a": "thuhai",
+            "b": "",
+            "c": "",
+            "d": ""
+          }
+        },
+        "expected": "All options A B C D are required",
+        "shouldPass": false
+      },
+      {
+        "id": "SCQ_03",
+        "title": "Them cau hoi that bai khi bo trong ca 4 option",
+        "data": {
+          "type": "single_choice",
+          "content": "Hom nay la thu may?",
+          "correctAnswer": "A",
+          "explanation": "hom nay la thu hai",
+          "options": {
+            "a": "",
+            "b": "",
+            "c": "",
+            "d": ""
+          }
+        },
+        "expected": "All options A B C D are required",
+        "shouldPass": false
+      },
+      {
+        "id": "SCQ_04",
+        "title": "Them cau hoi that bai khi bo trong noi dung",
+        "data": {
+          "type": "single_choice",
+          "content": "",
+          "correctAnswer": "D",
+          "explanation": "hom nay la thu bay",
+          "options": {
+            "a": "thuhai",
+            "b": "thu ba",
+            "c": "thu tu",
+            "d": "thubay"
+          }
+        },
+        "expected": "Content required",
+        "shouldPass": false
+      }
+    ],
+    "fillBlankQuestions": [
+      {
+        "id": "FBQ_01",
+        "title": "Them cau hoi fill blank thanh cong",
+        "data": {
+          "type": "fill_blank",
+          "content": "hom nay la thu may",
+          "correctAnswer": "chu nhat",
+          "explanation": "hom nay la chu nhat"
+        },
+        "expected": "Question created successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "FBQ_02",
+        "title": "Them cau hoi that bai khi bo trong Question content",
+        "data": {
+          "type": "fill_blank",
+          "content": "",
+          "correctAnswer": "chu nhat",
+          "explanation": "hom nay la chu nhat"
+        },
+        "expected": "Content required",
+        "shouldPass": false
+      },
+      {
+        "id": "FBQ_03",
+        "title": "Them cau hoi that bai khi Question content co ky tu dac biet",
+        "data": {
+          "type": "fill_blank",
+          "content": "hom nay la thu may ? #@$",
+          "correctAnswer": "chu nhat",
+          "explanation": "hom nay la chu nhat"
+        },
+        "expected": "Create failed",
+        "shouldPass": false
+      },
+      {
+        "id": "FBQ_04",
+        "title": "Them cau hoi that bai khi Correct answer co ky tu dac biet",
+        "data": {
+          "type": "fill_blank",
+          "content": "hom nay la thu may",
+          "correctAnswer": "chu nhat !",
+          "explanation": "hom nay la chu nhat"
+        },
+        "expected": "Create failed",
+        "shouldPass": false
+      },
+      {
+        "id": "FBQ_05",
+        "title": "Them cau hoi that bai khi bo trong Correct answer",
+        "data": {
+          "type": "fill_blank",
+          "content": "hom nay la thu may",
+          "correctAnswer": "",
+          "explanation": "hom nay la chu nhat"
+        },
+        "expected": "Correct answer required",
+        "shouldPass": false
+      }
+    ],
+    "profile": [
+      {
+        "id": "PRO_01",
+        "title": "Cap nhat profile thanh cong",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": "9876543210"
+        },
+        "expected": "Profile updated successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "PRO_02",
+        "title": "Cap nhat profile that bai khi bo trong Name",
+        "data": {
+          "name": "",
+          "phone": "9876543210"
+        },
+        "expected": "Name cannot be empty",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_03",
+        "title": "Cap nhat profile that bai khi Name qua 25 ky tu",
+        "data": {
+          "name": "nguyenthuhangnguyenthuhangg",
+          "phone": "9876543210"
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_04",
+        "title": "Cap nhat profile that bai khi Name co dau cach",
+        "data": {
+          "name": "ng uye nthuhang",
+          "phone": "9876543210"
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_05",
+        "title": "Cap nhat profile that bai khi bo trong Phone",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": ""
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_06",
+        "title": "Cap nhat profile that bai khi Phone khong dung dinh dang",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": "mothai"
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_07",
+        "title": "Cap nhat profile that bai khi Phone co dau cach",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": "98 765 43210"
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PRO_08",
+        "title": "Cap nhat profile that bai khi Phone da ton tai",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": "9876543210"
+        },
+        "expected": "Update failed",
+        "shouldPass": false,
+        "note": "Run after PRO_01 or seed another user with this phone."
+      },
+      {
+        "id": "PRO_09",
+        "title": "Cap nhat profile that bai khi Phone qua 11 ky tu",
+        "data": {
+          "name": "nguyenthuhang",
+          "phone": "987654321023"
+        },
+        "expected": "Update failed",
+        "shouldPass": false
+      }
+    ],
+    "changePassword": [
+      {
+        "id": "PWD_01",
+        "title": "Doi mat khau thanh cong",
+        "data": {
+          "oldPassword": "0338424119",
+          "newPassword": "0123456"
+        },
+        "expected": "Password changed successfully",
+        "shouldPass": true
+      },
+      {
+        "id": "PWD_02",
+        "title": "Doi mat khau that bai khi sai Old Password",
+        "data": {
+          "oldPassword": "0123456",
+          "newPassword": "123123"
+        },
+        "expected": "Change password failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PWD_03",
+        "title": "Doi mat khau that bai khi bo trong Old Password",
+        "data": {
+          "oldPassword": "",
+          "newPassword": "0123456"
+        },
+        "expected": "Please fill all fields",
+        "shouldPass": false
+      },
+      {
+        "id": "PWD_04",
+        "title": "Doi mat khau that bai khi Old Password co dau cach",
+        "data": {
+          "oldPassword": "033 842 41 19",
+          "newPassword": "0123456"
+        },
+        "expected": "Change password failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PWD_05",
+        "title": "Doi mat khau that bai khi New Password qua ngan",
+        "data": {
+          "oldPassword": "0338424119",
+          "newPassword": "123"
+        },
+        "expected": "New password must be at least 6 characters",
+        "shouldPass": false
+      },
+      {
+        "id": "PWD_06",
+        "title": "Doi mat khau that bai khi New Password co dau cach",
+        "data": {
+          "oldPassword": "0338424119",
+          "newPassword": "012 34 56"
+        },
+        "expected": "Change password failed",
+        "shouldPass": false
+      },
+      {
+        "id": "PWD_07",
+        "title": "Doi mat khau that bai khi bo trong New Password",
+        "data": {
+          "oldPassword": "0338424119",
+          "newPassword": ""
+        },
+        "expected": "Please fill all fields",
+        "shouldPass": false
+      }
+    ]
+  }
+}

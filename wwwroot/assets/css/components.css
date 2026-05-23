@@ -1,123 +1,154 @@
-/* ===== ELITE COMPONENTS & TABLES ===== */
-
-/* Table Overhaul */
-.table-container {
-  background: white;
-  border-radius: calc(var(--radius) - 4px);
-  padding: 18px;
+.card,
+.class-card,
+.assignment-card,
+.menu-card,
+.question-card,
+.profile-card,
+.result-score,
+.result-history,
+.table-container,
+.custom-modal-content {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  border: 1px solid rgba(15,23,42,0.03);
 }
 
-.table {
-  border-spacing: 0 10px;
-  border-collapse: separate;
-}
-
-.table th {
-  background: transparent;
-  color: var(--text-gray);
-  font-size: 0.8rem;
+.card,
+.class-card,
+.assignment-card,
+.menu-card,
+.question-card,
+.profile-card {
   padding: 20px;
 }
 
-.table tr td {
-  background: #fbfaf8;
-  padding: 16px;
+.card:hover,
+.class-card:hover,
+.assignment-card:hover,
+.menu-card:hover,
+.question-card:hover {
+  border-color: #b9c6d6;
 }
 
-.table tr td:first-child { border-radius: 20px 0 0 20px; }
-.table tr td:last-child { border-radius: 0 20px 20px 0; }
-
-.table tr:hover td {
-  background: #fff7e6;
-  color: var(--primary-dark);
+.table-container {
+  overflow-x: auto;
+  padding: 8px;
 }
 
-/* Modals */
-.custom-modal-content {
-  border-radius: var(--radius);
-  padding: 50px;
-  border: none;
-  box-shadow: 0 50px 100px rgba(0,0,0,0.2);
+.table,
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* Exam Layout */
-.exam-container {
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--bg-muted);
+}
+
+tr:hover td {
+  background: #fafcff;
+}
+
+.custom-modal,
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.custom-modal.show,
+.modal.show {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
 }
 
-.exam-left {
-  background: white;
-  border-radius: var(--radius);
-  padding: 50px;
-  box-shadow: var(--shadow);
+.custom-modal-content {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 24px;
 }
 
-.exam-right {
-  position: sticky;
-  top: 100px;
-  background: white;
-  border-radius: var(--radius);
-  padding: 30px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+.form-group {
+  margin-bottom: 16px;
+}
+
+.join-box,
+.search-box {
+  display: flex;
   gap: 10px;
-  box-shadow: var(--shadow);
 }
 
-.nav-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-  background: #f1f5f9;
-  border: none;
-  font-weight: 800;
-}
-
-.nav-btn.active {
-  background: var(--primary);
-  color: white;
-}
-
-.nav-btn.answered {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-/* Options */
 .option {
-  padding: 25px;
-  border-radius: 20px;
-  background: #f8fafc;
-  border: 2px solid transparent;
-  font-weight: 600;
-  margin-bottom: 15px;
+  display: block;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
 }
 
-.option:hover {
-  background: white;
-  border-color: var(--primary);
-  transform: translateX(10px);
+.option.correct {
+  border-color: #86efac;
+  background: #f0fdf4;
 }
 
 .option.selected {
-  background: white;
-  border-color: var(--primary);
-  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.1);
+  border-color: #93c5fd;
+  background: #eff6ff;
 }
 
-/* Result Score */
-.result-score {
-  background: white;
-  border-radius: 40px;
-  padding: 100px;
-  box-shadow: var(--shadow);
+.option.wrong,
+.option.fail {
+  border-color: #fecaca;
+  background: #fef2f2;
 }
 
-.score-main h1 {
-  font-size: 8rem;
-  letter-spacing: -8px;
+.empty-state {
+  padding: 32px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  text-align: center;
+}
+
+.review-status {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.review-status.success {
+  color: #047857;
+  background: #d1fae5;
+}
+
+.review-status.fail {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+@media (max-width: 640px) {
+  .join-box,
+  .search-box {
+    flex-direction: column;
+  }
 }

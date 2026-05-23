@@ -49,3 +49,5 @@ return /^[a-zA-Z]+$/
 }
 
 };
+
+window.Validator = Validator;

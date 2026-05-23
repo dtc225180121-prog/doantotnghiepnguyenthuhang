@@ -40,3 +40,5 @@ const Guard = {
     }
 
 };
+
+window.Guard = Guard;

@@ -50,13 +50,13 @@ function openCreateModal(q = null)
 
     if (assignmentType === "single_choice")
     {
-        optionsBox.style.display = "block";
-        fillAnswerBox.style.display = "none";
+        document.getElementById("optionsBox").style.display = "block";
+        document.getElementById("fillAnswerBox").style.display = "none";
     }
     else
     {
-        optionsBox.style.display = "none";
-        fillAnswerBox.style.display = "block";
+        document.getElementById("optionsBox").style.display = "none";
+        document.getElementById("fillAnswerBox").style.display = "block";
     }
 }
 
@@ -136,27 +136,26 @@ async function submitQuestion()
 
     if(assignmentType === "single_choice")
     {
-        const A = A.value.trim();
-        const B = B.value.trim();
-        const C = C.value.trim();
-        const D = D.value.trim();
+        const optionA = document.getElementById("A").value.trim();
+        const optionB = document.getElementById("B").value.trim();
+        const optionC = document.getElementById("C").value.trim();
+        const optionD = document.getElementById("D").value.trim();
 
-        if(!A||!B||!C||!D)
+        if(!optionA || !optionB || !optionC || !optionD)
             return alert("All options required");
 
-        correctAnswer = correctAnswer.value;
+        correctAnswer = document.getElementById("correctAnswer").value;
     }
     else
     {
-        correctAnswer = fillCorrectAnswer.value.trim();
+        correctAnswer = document.getElementById("fillCorrectAnswer").value.trim();
     }
 
-    const explanation = explanation.value.trim();
+    const explanation = document.getElementById("explanation").value.trim();
 
     if(editingId)
     {
-        await API.request("/question/update","PUT",{
-            id: editingId,
+        await API.request("/question/update/" + editingId,"PUT",{
             content,
             correctAnswer,
             explanation
@@ -176,7 +175,10 @@ async function submitQuestion()
         {
             await API.request("/question/add-options","POST",{
                 questionId:q.id,
-                A:A.value,B:B.value,C:C.value,D:D.value
+                A: document.getElementById("A").value.trim(),
+                B: document.getElementById("B").value.trim(),
+                C: document.getElementById("C").value.trim(),
+                D: document.getElementById("D").value.trim()
             });
         }
     }
@@ -240,16 +242,13 @@ async function assign(classId)
 
 // ================= UTIL =================
 function resetForm()
-{
-    content.value="";
-    explanation.value="";
-    fillCorrectAnswer.value="";
-
-    if(A)
     {
-        A.value="";
-        B.value="";
-        C.value="";
-        D.value="";
+    document.getElementById("content").value="";
+    document.getElementById("explanation").value="";
+    document.getElementById("fillCorrectAnswer").value="";
+
+    ["A", "B", "C", "D"].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = "";
+    });
     }
-}

@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: aoe-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: FRONTEND_ORIGINS
+        value: https://english-hub-aoe.vercel.app
+      - key: Jwt__Key
+        value: this_is_a_super_secure_secret_key_2026
+      - key: Jwt__Issuer
+        value: aoe-api
+      - key: Jwt__Audience
+        value: aoe-client
+      - key: Jwt__ExpireMinutes
+        value: 120
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aoe-db
+          property: connectionString
+      - key: Gemini__ApiKey
+        sync: false
+
+databases:
+  - name: aoe-db
+    plan: free
+    databaseName: aoe
+    user: aoe_user

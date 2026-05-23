@@ -66,3 +66,12 @@ Logout
 }
 
 };
+
+window.Sidebar = Sidebar;
+
+if (!window.logout) {
+    window.logout = function logout() {
+        Storage.clear();
+        window.location.href = "/pages/auth/login.html";
+    };
+}

@@ -11,8 +11,12 @@ obj/
 # Logs
 *.log
 
+# Build output
+dist/
+
 # OS
 .DS_Store
 Thumbs.db
 
 !Dockerfile
+.vercel

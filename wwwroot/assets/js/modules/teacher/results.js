@@ -94,13 +94,18 @@ function filterResults()
 }
 
 // ================= EXPORT =================
-function exportCSV()
+async function exportCSV()
 {
-    window.open(
-        CONFIG.API_BASE +
-        "/result/export/" +
-        assignmentId
-    );
+    try {
+        await API.download(
+            "/result/export/" + assignmentId,
+            "assignment-result.csv"
+        );
+    }
+    catch (err) {
+        console.error(err);
+        alert(err.message || "Export failed");
+    }
 }
 
 // ================= UTIL =================

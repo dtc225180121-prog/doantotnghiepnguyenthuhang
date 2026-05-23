@@ -48,7 +48,7 @@ document
 
 const classes =
 await API.request(
-"/class/my-classes?keyword=" + keyword
+"/class/my-classes?keyword=" + encodeURIComponent(keyword)
 );
 
 

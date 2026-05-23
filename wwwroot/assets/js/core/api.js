@@ -1,4 +1,21 @@
 const API = {
+    buildUrl(endpoint) {
+        return CONFIG.API_BASE + endpoint;
+    },
+
+    buildHeaders() {
+        const headers = {
+            "Content-Type": "application/json"
+        };
+
+        const token = Storage.getToken();
+
+        if (token) {
+            headers.Authorization = "Bearer " + token;
+        }
+
+        return headers;
+    },
 
 async request(
 endpoint,
@@ -7,10 +24,6 @@ body = null
 )
 {
 
-const token =
-
-    const token = Storage.getToken();
-
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), 10000);
 
@@ -18,23 +31,23 @@ const token =
 
         const options = {
             method,
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: this.buildHeaders(),
             signal: controller.signal
         };
-
-        if (token) {
-            options.headers.Authorization = "Bearer " + token;
-        }
 
         if (body) {
             options.body = JSON.stringify(body);
         }
 
-        const response = await fetch(CONFIG.API_BASE + endpoint, options);
+        const response = await fetch(this.buildUrl(endpoint), options);
 
         if (!response.ok) {
+            if (response.status === 401) {
+                Storage.clear();
+                window.location.href = "/pages/auth/login.html";
+                throw { message: "Session expired. Please log in again." };
+            }
+
             const text = await response.text();
 
             try {
@@ -88,6 +101,31 @@ async put(endpoint, body) {
 
 async delete(endpoint) {
     return this.request(endpoint, "DELETE");
+},
+
+async download(endpoint, filename = "download") {
+    const response = await fetch(this.buildUrl(endpoint), {
+        method: "GET",
+        headers: this.buildHeaders()
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw { message: text || "Download failed" };
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
 }
 
 };
+
+window.API = API;

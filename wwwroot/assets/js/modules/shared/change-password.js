@@ -1,3 +1,7 @@
+window.onload = () => {
+    renderLayout(Storage.getRole());
+};
+
 async function changePassword()
 {
     const btn = document.getElementById("changeBtn");

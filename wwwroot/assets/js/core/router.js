@@ -165,3 +165,5 @@ location.href =
 }
 
 };
+
+window.Router = Router;

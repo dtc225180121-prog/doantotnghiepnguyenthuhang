@@ -11,20 +11,14 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // ======================
-// 🔥 FIX ENV CONNECTION STRING (QUAN TRỌNG NHẤT)
-// Prefer cloud env vars in production; only fall back to localhost for local dev.
+// DATABASE CONNECTION
+// Production hosts often keep a localhost value in appsettings.json. Never use
+// that fallback outside Development; prefer explicit cloud database variables.
 // ======================
-var connStr =
-    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-    ?? NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("SUPABASE_DB_URL"))
-    ?? Environment.GetEnvironmentVariable("CUSTOM_CONNECTION")
-    ?? NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL"))
-    ?? (builder.Environment.IsDevelopment()
-        ? builder.Configuration.GetConnectionString("DefaultConnection")
-        : null);
+var connStr = ResolveConnectionString(builder);
 
-Console.WriteLine("🔥 CONN RAW: " + connStr);
-Console.WriteLine("🔥 JWT KEY: " + builder.Configuration["Jwt:Key"]);
+Console.WriteLine("DB CONFIG: " + DescribeConnectionString(connStr));
+Console.WriteLine("JWT CONFIG: " + (string.IsNullOrEmpty(builder.Configuration["Jwt:Key"]) ? "missing" : "set"));
 
 if (string.IsNullOrEmpty(connStr))
 {
@@ -94,17 +88,35 @@ builder.Services.AddAuthorization();
 // ======================
 // CORS
 // ======================
+var allowedFrontendOrigins = new[]
+{
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://aoe-frontend.onrender.com"
+}
+.Concat(
+    (Environment.GetEnvironmentVariable("FRONTEND_ORIGINS") ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+)
+.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy =>
         {
             policy
-            .WithOrigins(
-                "http://127.0.0.1:5500",
-                "http://localhost:5500",
-                "https://aoe-frontend.onrender.com"
-            )
+            .SetIsOriginAllowed(origin =>
+            {
+                if (allowedFrontendOrigins.Contains(origin))
+                {
+                    return true;
+                }
+
+                return Uri.TryCreate(origin, UriKind.Absolute, out var uri) &&
+                    uri.Scheme == Uri.UriSchemeHttps &&
+                    uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase);
+            })
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -186,7 +198,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            context.Context.Response.Headers.CacheControl = "no-store, no-cache, must-revalidate";
+            context.Context.Response.Headers.Pragma = "no-cache";
+            context.Context.Response.Headers.Expires = "0";
+        }
+    }
+});
 
 app.UseHttpsRedirection();
 
@@ -225,6 +248,23 @@ app.MapGet("/", () => Results.Content(@"<!DOCTYPE html>
 
 app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
 
+app.MapGet("/healthz/db", async (AoeDbContext db) =>
+{
+    try
+    {
+        var canConnect = await db.Database.CanConnectAsync();
+
+        return canConnect
+            ? Results.Ok(new { status = "ok", database = "connected" })
+            : Results.StatusCode(503);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("DB HEALTH ERROR: " + ex);
+        return Results.Problem("Database is unavailable", statusCode: 503);
+    }
+});
+
 // ======================
 // DATABASE MIGRATION
 // Keep startup resilient on cloud hosts: a temporary DB issue should not
@@ -248,6 +288,96 @@ using (var scope = app.Services.CreateScope())
 
 // ======================
 app.Run();
+
+static string? ResolveConnectionString(WebApplicationBuilder appBuilder)
+{
+    var isDevelopment = appBuilder.Environment.IsDevelopment();
+
+    var candidates = new[]
+    {
+        ("ConnectionStrings__DefaultConnection", Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")),
+        ("SUPABASE_DB_URL", NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("SUPABASE_DB_URL"))),
+        ("CUSTOM_CONNECTION", NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("CUSTOM_CONNECTION"))),
+        ("DATABASE_URL", NormalizeDatabaseUrl(Environment.GetEnvironmentVariable("DATABASE_URL"))),
+        ("appsettings:DefaultConnection", isDevelopment
+            ? appBuilder.Configuration.GetConnectionString("DefaultConnection")
+            : null)
+    };
+
+    foreach (var (name, value) in candidates)
+    {
+        var cleaned = CleanConnectionString(value);
+
+        if (string.IsNullOrEmpty(cleaned))
+        {
+            continue;
+        }
+
+        if (!isDevelopment && LooksLikeLocalDatabase(cleaned))
+        {
+            Console.WriteLine($"DB CONFIG: skipped local connection string from {name} in Production");
+            continue;
+        }
+
+        Console.WriteLine($"DB CONFIG: using {name}");
+        return cleaned;
+    }
+
+    return null;
+}
+
+static string? CleanConnectionString(string? connectionString)
+{
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        return null;
+    }
+
+    connectionString = connectionString.Trim();
+
+    if (connectionString.Length >= 2 &&
+        ((connectionString[0] == '"' && connectionString[^1] == '"') ||
+        (connectionString[0] == '\'' && connectionString[^1] == '\'')))
+    {
+        connectionString = connectionString[1..^1].Trim();
+    }
+
+    return connectionString;
+}
+
+static bool LooksLikeLocalDatabase(string connectionString)
+{
+    try
+    {
+        var builder = new NpgsqlConnectionStringBuilder(connectionString);
+        var host = builder.Host?.Trim().ToLowerInvariant();
+
+        return host is "localhost" or "127.0.0.1" or "::1";
+    }
+    catch
+    {
+        return connectionString.Contains("localhost", StringComparison.OrdinalIgnoreCase) ||
+            connectionString.Contains("127.0.0.1", StringComparison.OrdinalIgnoreCase);
+    }
+}
+
+static string DescribeConnectionString(string? connectionString)
+{
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        return "missing";
+    }
+
+    try
+    {
+        var builder = new NpgsqlConnectionStringBuilder(connectionString);
+        return $"Host={builder.Host};Port={builder.Port};Database={builder.Database};Username={builder.Username};SslMode={builder.SslMode}";
+    }
+    catch
+    {
+        return "set";
+    }
+}
 
 static string? NormalizeDatabaseUrl(string? databaseUrl)
 {

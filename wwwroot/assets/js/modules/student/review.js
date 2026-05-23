@@ -315,6 +315,6 @@ async function askAI(index) {
 function goBack() {
 
     location.href =
-        "/pages/student/exam-menu.html?assignmentId="
+        "/pages/student/assignment-menu.html?assignmentId="
         + assignmentId;
 }

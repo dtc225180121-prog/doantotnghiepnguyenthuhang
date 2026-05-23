@@ -5,22 +5,34 @@
 <meta charset="UTF-8">
 <title>Result</title>
 
-<link rel="stylesheet" href="../../assets/css/base.css">
-<link rel="stylesheet" href="../../assets/css/layout.css">
-<link rel="stylesheet" href="../../assets/css/components.css">
-<link rel="stylesheet" href="../../assets/css/skeleton.css">
-<link rel="stylesheet" href="../../assets/css/dashboard.css">
+<link rel="stylesheet" href="../../assets/css/base.css?v=20260523f">
+<link rel="stylesheet" href="../../assets/css/layout.css?v=20260523f">
+<link rel="stylesheet" href="../../assets/css/components.css?v=20260523f">
+<link rel="stylesheet" href="../../assets/css/skeleton.css?v=20260523f">
+<link rel="stylesheet" href="../../assets/css/dashboard.css?v=20260523f">
 
-<script src="../../assets/js/core/config.js"></script>
-<script src="../../assets/js/core/storage.js"></script>
-<script src="../../assets/js/core/api.js"></script>
+<script src="../../assets/js/core/config.js?v=20260523f"></script>
+<script src="../../assets/js/core/storage.js?v=20260523f"></script>
+<script src="../../assets/js/core/api-client.js?v=20260523f"></script>
+<script src="../../assets/js/core/router.js?v=20260523f"></script>
+<script src="../../assets/js/core/guard.js?v=20260523f"></script>
+<script src="../../assets/js/layout/sidebar.js?v=20260523f"></script>
+<script src="../../assets/js/layout/layout.js?v=20260523f"></script>
 
-<script defer src="../../assets/js/modules/student/result.js"></script>
+<script>
+Guard.requireLogin();
+Guard.requireStudent();
+</script>
+
+<script defer src="../../assets/js/modules/student/result.js?v=20260523f"></script>
 
 </head>
 
 <body>
 
+<div id="layout"></div>
+
+<div class="content">
 <div class="result-container">
 
     <!-- HEADER -->
@@ -53,6 +65,7 @@
 
 </div>
 
+</div>
 </div>
 
 </body>

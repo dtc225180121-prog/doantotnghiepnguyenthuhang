@@ -18,25 +18,25 @@ namespace aoe.Controllers
             _context = context;
         }
 
+        private int GetTeacherId()
+        {
+            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+        }
+
+        private bool OwnsAssignment(int assignmentId)
+        {
+            var teacherId = GetTeacherId();
+
+            return _context.Assignments.Any(a =>
+                a.Id == assignmentId &&
+                a.TeacherId == teacherId);
+        }
+
         // ================= RESULTS =================
         [HttpGet("assignment/{assignmentId}")]
         public IActionResult AssignmentResults(int assignmentId)
         {
-            var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
-            );
-
-            bool ownsAssignment =
-            (
-                from ac in _context.AssignmentClasses
-                join c in _context.Classes
-                on ac.ClassId equals c.Id
-                where ac.AssignmentId == assignmentId
-                && c.TeacherId == teacherId
-                select ac
-            ).Any();
-
-            if (!ownsAssignment)
+            if (!OwnsAssignment(assignmentId))
                 return Unauthorized();
 
             var results =
@@ -62,21 +62,7 @@ namespace aoe.Controllers
         [HttpGet("export/{assignmentId}")]
         public IActionResult ExportCSV(int assignmentId)
         {
-            var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
-            );
-
-            bool ownsAssignment =
-            (
-                from ac in _context.AssignmentClasses
-                join c in _context.Classes
-                on ac.ClassId equals c.Id
-                where ac.AssignmentId == assignmentId
-                && c.TeacherId == teacherId
-                select ac
-            ).Any();
-
-            if (!ownsAssignment)
+            if (!OwnsAssignment(assignmentId))
                 return Unauthorized();
 
             var results =
@@ -114,21 +100,7 @@ namespace aoe.Controllers
         [HttpGet("review/{assignmentId}/{studentId}")]
         public IActionResult Review(int assignmentId, int studentId)
         {
-            var teacherId = int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"
-            );
-
-            bool ownsAssignment =
-            (
-                from ac in _context.AssignmentClasses
-                join c in _context.Classes
-                on ac.ClassId equals c.Id
-                where ac.AssignmentId == assignmentId
-                && c.TeacherId == teacherId
-                select ac
-            ).Any();
-
-            if (!ownsAssignment)
+            if (!OwnsAssignment(assignmentId))
                 return Unauthorized();
 
             // 🔥 LOAD ALL OPTIONS TRƯỚC (FIX N+1)

@@ -32,11 +32,20 @@ namespace aoe.Controllers
                 if (dto == null)
                     return BadRequest("Invalid request");
 
-                dto.Name = dto.Name!.Trim();
-                dto.Email = dto.Email!.Trim().ToLower();
-                dto.Phone = dto.Phone!.Trim();
-                dto.Password = dto.Password!.Trim();
-                dto.Role = dto.Role!.Trim().ToLower();
+                if (string.IsNullOrWhiteSpace(dto.Name) ||
+                    string.IsNullOrWhiteSpace(dto.Email) ||
+                    string.IsNullOrWhiteSpace(dto.Phone) ||
+                    string.IsNullOrWhiteSpace(dto.Password) ||
+                    string.IsNullOrWhiteSpace(dto.Role))
+                {
+                    return BadRequest("Please fill all fields");
+                }
+
+                dto.Name = dto.Name.Trim();
+                dto.Email = dto.Email.Trim().ToLower();
+                dto.Phone = dto.Phone.Trim();
+                dto.Password = dto.Password.Trim();
+                dto.Role = dto.Role.Trim().ToLower();
 
                 if (!ValidationHelper.ValidEmail(dto.Email))
                     return BadRequest("Invalid email");
@@ -91,6 +100,12 @@ namespace aoe.Controllers
             {
                 if (dto == null)
                     return BadRequest("Invalid request");
+
+                if (string.IsNullOrWhiteSpace(dto.Email) ||
+                    string.IsNullOrWhiteSpace(dto.Password))
+                {
+                    return BadRequest("Please fill all fields");
+                }
 
                 dto.Email = dto.Email.Trim().ToLower();
                 dto.Password = dto.Password.Trim();

@@ -1,16 +1,8 @@
-/* Small global overrides if needed */
 .profile-container {
-  display: flex;
-  justify-content: center;
-  padding: 50px 0;
+  width: min(760px, 100%);
+  margin: 0 auto;
 }
 
-.profile-card {
-  width: 100%;
-  max-width: 500px;
-}
-
-/* Ensure layouts are responsive */
 @media (max-width: 900px) {
   .exam-container {
     grid-template-columns: 1fr;

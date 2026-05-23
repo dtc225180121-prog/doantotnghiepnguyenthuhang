@@ -1,92 +1,176 @@
-/* ===== ELITE BENTO DASHBOARD ===== */
-
-.dashboard-grid, .class-grid, .assignment-grid, .menu-grid {
+.dashboard-grid,
+.stats-grid,
+.class-grid,
+.assignment-grid,
+.menu-grid,
+.class-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
-/* Bento Style Cards */
-.class-card, .assignment-card, .menu-card, .card {
-  background: var(--bg-card);
+.dashboard-card {
+  min-height: 112px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 35px;
-  transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
   box-shadow: var(--shadow);
-  border: none;
+  cursor: pointer;
 }
 
-.class-card:hover, .assignment-card:hover, .menu-card:hover, .card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: var(--shadow-hover);
+.dashboard-card:hover {
+  border-color: #b9c6d6;
 }
 
-/* Stat Cards (Small Bento) */
-.stats-grid {
+.dashboard-card .icon {
+  width: 42px;
+  height: 42px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 50px;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--bg-muted);
 }
 
-.stats-grid .card {
-  padding: 25px;
-  border-radius: 20px;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.stats-grid .card h2,
+.dashboard-grid .card h2 {
+  margin: 4px 0 0;
+  color: var(--primary);
+  font-size: 32px;
 }
 
-.stats-grid h2 {
-  font-size: 3rem;
-  margin: 0;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.stats-grid p {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  font-weight: 800;
-  color: var(--text-gray);
-  margin: 0;
-}
-
-/* Assignment Specific */
-.assignment-title {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+.assignment-title,
+.question-title {
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .assignment-meta {
-  background: #f1f5f9;
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 10px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-right: 8px;
+  display: inline-flex;
+  margin: 4px 6px 4px 0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .assignment-actions {
-  margin-top: 30px;
+  margin-top: 16px;
+}
+
+.menu-card {
+  min-height: 140px;
+  cursor: pointer;
+}
+
+.menu-card.disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.result-container,
+.profile-container {
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.result-score,
+.result-history {
+  margin-bottom: 18px;
+  padding: 24px;
+}
+
+.score-main {
+  text-align: center;
+}
+
+.score-main h1 {
+  margin: 0;
+  font-size: 64px;
+}
+
+.score-main.excellent h1 {
+  color: var(--success);
+}
+
+.score-main.pass h1 {
+  color: var(--primary);
+}
+
+.score-main.fail h1 {
+  color: var(--danger);
+}
+
+.history-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.history-card.latest {
+  color: var(--primary);
+}
+
+.score-badge {
+  display: inline-flex;
+  min-width: 46px;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  font-weight: 700;
+}
+
+.profile-left {
+  text-align: center;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  place-items: center;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: var(--bg-muted);
+  color: var(--primary);
+  font-size: 28px;
+  font-weight: 800;
 }
 
-.assignment-actions button {
-  padding: 10px;
-  font-size: 0.8rem;
+.role-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
 }
 
-/* Empty State */
-.empty-state {
-  background: white;
-  border-radius: var(--radius);
-  padding: 80px;
-  border: 3px dashed var(--border);
+.profile-card {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 720px) {
+  .profile-card {
+    grid-template-columns: 1fr;
+  }
+
+  .history-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
