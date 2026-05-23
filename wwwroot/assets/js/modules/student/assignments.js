@@ -64,7 +64,7 @@ function render(assignments) {
         container.innerHTML = `
             <div class="empty-state">
                 <h4>No assignments yet</h4>
-                <p class="text-muted">You're all caught up 🎉</p>
+                <p class="text-muted">You're all caught up.</p>
             </div>
         `;
         return;

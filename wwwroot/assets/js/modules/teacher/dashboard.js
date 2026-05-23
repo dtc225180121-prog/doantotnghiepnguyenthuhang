@@ -40,7 +40,7 @@ async function loadNotifications() {
         const submissions = await API.get("/submission/my");
 
         if (!submissions || submissions.length === 0) {
-            container.innerHTML = `<p class="text-muted">No recent activity</p>`;
+            container.innerHTML = `<p class="text-muted">No recent activity yet.</p>`;
             return;
         }
 
@@ -62,6 +62,6 @@ async function loadNotifications() {
 
     } catch (err) {
         console.error(err);
-        container.innerHTML = `<p class="text-danger">Failed to load activity</p>`;
+        container.innerHTML = `<p class="text-muted">Activity is not available right now.</p>`;
     }
 }

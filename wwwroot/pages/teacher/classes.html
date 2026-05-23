@@ -36,7 +36,6 @@ Guard.requireTeacher();
 <div class="content">
 <div class="container">
 
-    <!-- 🔷 TOPBAR -->
     <div class="topbar">
         <div class="topbar-title">Classes</div>
 
@@ -45,19 +44,16 @@ Guard.requireTeacher();
         </div>
     </div>
 
-    <!-- 🔍 SEARCH -->
-    <div class="card" style="margin-bottom: 20px;">
+    <div class="card toolbar mb-4">
         <input id="keyword" placeholder="Search class">
         <button onclick="loadClasses()">Search</button>
     </div>
 
-    <!-- ➕ CREATE -->
-    <div class="card" style="margin-bottom: 20px;">
+    <div class="card toolbar mb-4">
         <input id="className" placeholder="New class name">
         <button onclick="createClass()">Create class</button>
     </div>
 
-    <!-- 📦 CLASS GRID -->
     <div id="classList" class="class-grid"></div>
 
 </div>

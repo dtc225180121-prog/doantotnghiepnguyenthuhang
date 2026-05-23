@@ -27,7 +27,7 @@ async function loadProfile() {
 
         // show form
         document.getElementById("loadingState").remove();
-        document.getElementById("profileForm").style.display = "block";
+        document.getElementById("profileForm").classList.remove("hidden");
 
     } catch (err) {
         console.error(err);

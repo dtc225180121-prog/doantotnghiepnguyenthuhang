@@ -37,42 +37,37 @@ Guard.requireTeacher();
 <div class="content">
 <div class="container">
 
-    <!-- 🔷 TOP BAR -->
     <div class="topbar">
-        <div class="topbar-title">Dashboard</div>
-
-        <div class="topbar-actions">
-            <button>🔔</button>
-            <button onclick="logout()">Logout</button>
+        <div>
+            <div class="topbar-title">Teacher Dashboard</div>
+            <p class="text-muted">Shared overview of classes, assignments, students, and submissions.</p>
         </div>
     </div>
 
-    <!-- 🔥 DASHBOARD MENU (MAIN UI) -->
     <div class="dashboard-grid">
 
         <div class="dashboard-card" onclick="Router.goTeacherClasses()">
-            <div class="icon">📚</div>
+            <div class="icon" data-label="CL"></div>
             <span>Classes</span>
         </div>
 
         <div class="dashboard-card" onclick="Router.goAssignments()">
-            <div class="icon">📄</div>
+            <div class="icon" data-label="AS"></div>
             <span>Assignments</span>
         </div>
 
         <div class="dashboard-card" onclick="Router.goStudents()">
-            <div class="icon">👨‍🎓</div>
+            <div class="icon" data-label="ST"></div>
             <span>Students</span>
         </div>
 
-        <div class="dashboard-card">
-            <div class="icon">📊</div>
+        <div class="dashboard-card" onclick="Router.goAssignments()">
+            <div class="icon" data-label="RS"></div>
             <span>Results</span>
         </div>
 
     </div>
 
-    <!-- 🔢 STATS -->
     <div class="stats-grid">
 
         <div class="card">
@@ -97,8 +92,7 @@ Guard.requireTeacher();
 
     </div>
 
-    <!-- 🔔 NOTIFICATIONS -->
-    <div class="card" style="margin-top:20px;">
+    <div class="card mt-4">
         <h4>Recent Activity</h4>
         <div id="notifications"></div>
     </div>

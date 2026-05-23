@@ -1,4 +1,4 @@
-const DEPLOYED_API_ORIGIN = "https://aoe-backend-3.onrender.com";
+const DEPLOYED_API_ORIGIN = "https://duancuahang-vvmv.onrender.com";
 
 const isLocalFrontend =
     window.location.protocol === "file:" ||

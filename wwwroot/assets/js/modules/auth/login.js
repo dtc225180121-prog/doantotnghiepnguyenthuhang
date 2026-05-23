@@ -81,10 +81,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    if (button) {
-
-        button.addEventListener("click", () => login());
-
-    }
-
 });

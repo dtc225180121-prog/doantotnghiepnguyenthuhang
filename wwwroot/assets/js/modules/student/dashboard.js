@@ -40,7 +40,7 @@ async function loadAssignments() {
         const assignments = await API.get("/assignment/student");
 
         if (!assignments || assignments.length === 0) {
-            container.innerHTML = `<p class="text-muted">No assignments</p>`;
+            container.innerHTML = `<p class="text-muted">No assignments yet.</p>`;
             return;
         }
 
@@ -90,7 +90,7 @@ async function loadAssignments() {
 
     } catch (err) {
         console.error(err);
-        container.innerHTML = `<p class="text-danger">Load failed</p>`;
+        container.innerHTML = `<p class="text-muted">Assignments are not available right now.</p>`;
     }
 }
 
