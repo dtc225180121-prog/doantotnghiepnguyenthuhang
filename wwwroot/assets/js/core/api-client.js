@@ -19,7 +19,7 @@ const API = {
 
     async request(endpoint, method = "GET", body = null) {
         const controller = new AbortController();
-        const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+        const timeoutId = window.setTimeout(() => controller.abort(), 60000);
 
         try {
             const options = {
@@ -61,7 +61,7 @@ const API = {
         }
         catch (error) {
             if (error && error.name === "AbortError") {
-                throw { message: "Server did not respond in time. Check Render logs and database connection." };
+                throw { message: "Server is waking up. Please try again in a moment." };
             }
 
             throw error;
