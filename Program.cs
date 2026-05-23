@@ -92,7 +92,9 @@ var allowedFrontendOrigins = new[]
 {
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-    "https://aoe-frontend.onrender.com"
+    "https://aoe-frontend.onrender.com",
+    "https://duancuabanhang.onrender.com",
+    "https://english-hub-aoe.vercel.app"
 }
 .Concat(
     (Environment.GetEnvironmentVariable("FRONTEND_ORIGINS") ?? "")
@@ -115,7 +117,10 @@ builder.Services.AddCors(options =>
 
                 return Uri.TryCreate(origin, UriKind.Absolute, out var uri) &&
                     uri.Scheme == Uri.UriSchemeHttps &&
-                    uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase);
+                    (
+                        uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase) ||
+                        uri.Host.EndsWith(".onrender.com", StringComparison.OrdinalIgnoreCase)
+                    );
             })
             .AllowAnyHeader()
             .AllowAnyMethod()

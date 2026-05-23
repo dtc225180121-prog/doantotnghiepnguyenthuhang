@@ -8,7 +8,7 @@ services:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: FRONTEND_ORIGINS
-        value: https://english-hub-aoe.vercel.app
+        value: https://english-hub-aoe.vercel.app,https://duancuabanhang.onrender.com
       - key: Jwt__Key
         value: this_is_a_super_secure_secret_key_2026
       - key: Jwt__Issuer
