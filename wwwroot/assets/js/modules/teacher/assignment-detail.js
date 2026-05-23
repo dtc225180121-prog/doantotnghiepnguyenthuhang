@@ -42,9 +42,29 @@ function openCreateModal(q = null)
         document.getElementById("modalTitle").innerText = "Edit Question";
         document.getElementById("content").value = q.content;
         document.getElementById("explanation").value = q.explanation || "";
+
+        if (assignmentType === "single_choice")
+        {
+            document.getElementById("correctAnswer").value =
+                (q.correctAnswer || "").trim().toUpperCase();
+
+            (q.options || []).forEach((o, index) =>
+            {
+                const optionInput = document.getElementById(["A", "B", "C", "D"][index]);
+                if (optionInput)
+                {
+                    optionInput.value = o.content || "";
+                }
+            });
+        }
+        else
+        {
+            document.getElementById("fillCorrectAnswer").value = q.correctAnswer || "";
+        }
     }
     else
     {
+        document.getElementById("modalTitle").innerText = "Create Question";
         resetForm();
     }
 
@@ -160,6 +180,16 @@ async function submitQuestion()
             correctAnswer,
             explanation
         });
+
+        if(assignmentType === "single_choice")
+        {
+            await API.request("/question/update-options/" + editingId,"PUT",{
+                A: document.getElementById("A").value.trim(),
+                B: document.getElementById("B").value.trim(),
+                C: document.getElementById("C").value.trim(),
+                D: document.getElementById("D").value.trim()
+            });
+        }
     }
     else
     {
