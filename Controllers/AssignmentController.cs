@@ -27,20 +27,14 @@ namespace aoe.Controllers
 
         private bool OwnsAssignment(int assignmentId)
         {
-            var teacherId = GetUserId();
-
             return _context.Assignments.Any(a =>
-                a.Id == assignmentId &&
-                a.TeacherId == teacherId);
+                a.Id == assignmentId);
         }
 
         private bool OwnsClass(int classId)
         {
-            var teacherId = GetUserId();
-
             return _context.Classes.Any(c =>
-                c.Id == classId &&
-                c.TeacherId == teacherId);
+                c.Id == classId);
         }
 
         [HttpGet("{id}")]
@@ -118,10 +112,7 @@ namespace aoe.Controllers
         public IActionResult MyAssignments(
             string? keyword)
         {
-            var teacherId = GetUserId();
-
-            var query = _context.Assignments
-                .Where(x => x.TeacherId == teacherId);
+            var query = _context.Assignments.AsQueryable();
 
             if (!string.IsNullOrEmpty(keyword))
             {

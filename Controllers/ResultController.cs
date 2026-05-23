@@ -25,11 +25,8 @@ namespace aoe.Controllers
 
         private bool OwnsAssignment(int assignmentId)
         {
-            var teacherId = GetTeacherId();
-
             return _context.Assignments.Any(a =>
-                a.Id == assignmentId &&
-                a.TeacherId == teacherId);
+                a.Id == assignmentId);
         }
 
         // ================= RESULTS =================

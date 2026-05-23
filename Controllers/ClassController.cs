@@ -32,12 +32,8 @@ namespace aoe.Controllers
 
         private bool OwnsClass(int classId)
         {
-            var teacherId = GetTeacherId();
-
             return _context.Classes.Any(
-                x =>
-                    x.Id == classId &&
-                    x.TeacherId == teacherId
+                x => x.Id == classId
             );
         }
 
@@ -107,13 +103,8 @@ namespace aoe.Controllers
         public IActionResult MyClasses(
             string? keyword)
         {
-            var teacherId = GetTeacherId();
-
             var query =
-                _context.Classes
-                .Where(x =>
-                    x.TeacherId == teacherId
-                );
+                _context.Classes.AsQueryable();
 
             if (!string.IsNullOrEmpty(keyword))
             {
@@ -135,10 +126,7 @@ namespace aoe.Controllers
         [HttpGet("all-students")]
         public IActionResult AllStudents()
         {
-            var teacherId = GetTeacherId();
-
             var studentIds = _context.Classes
-                .Where(c => c.TeacherId == teacherId)
                 .Join(_context.ClassStudents,
                       c => c.Id,
                       cs => cs.ClassId,

@@ -48,7 +48,6 @@ namespace aoe.Controllers
                 var submissions = from r in _context.Results
                                  join a in _context.Assignments on r.AssignmentId equals a.Id
                                  join u in _context.Users on r.StudentId equals u.Id
-                                 where a.TeacherId == userId
                                  orderby r.SubmittedAt descending
                                  select new
                                  {
