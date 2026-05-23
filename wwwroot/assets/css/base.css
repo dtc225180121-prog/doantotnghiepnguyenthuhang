@@ -46,6 +46,55 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: page-out 0.16s ease both;
+}
+
+::view-transition-new(root) {
+  animation: page-in 0.22s ease both;
+}
+
+body:not(.auth-page) .content,
+body:not(.auth-page) .main-content,
+body.auth-page .glass-card {
+  animation: page-in 0.24s ease both;
+}
+
+html.is-leaving .content,
+html.is-leaving .main-content,
+html.is-leaving body.auth-page .glass-card {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
 h1,
 h2,
 h3,
@@ -243,5 +292,13 @@ hr {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+
+  body:not(.auth-page) .content,
+  body:not(.auth-page) .main-content,
+  body.auth-page .glass-card,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
   }
 }

@@ -111,14 +111,15 @@
 
 .content,
 .main-content {
-  width: min(1180px, calc(100% - var(--sidebar-width) - 56px));
-  margin-left: calc(var(--sidebar-width) + 28px);
-  margin-right: 28px;
-  padding: 42px 0 64px;
+  width: calc(100% - var(--sidebar-width));
+  margin-left: var(--sidebar-width);
+  padding: 46px clamp(40px, 4.6vw, 76px) 72px;
+  transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
 .container {
-  width: 100%;
+  width: min(100%, 1320px);
+  margin: 0 auto;
 }
 
 .topbar,

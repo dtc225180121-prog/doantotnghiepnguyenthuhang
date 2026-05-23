@@ -1,5 +1,22 @@
 const Router = {
 
+navigate(url) {
+
+const destination =
+new URL(url, window.location.origin);
+
+if(destination.href === window.location.href)
+return;
+
+document.documentElement.classList.add("is-leaving");
+
+window.setTimeout(() => {
+window.location.href =
+destination.href;
+}, 140);
+
+},
+
 redirectByRole() {
 
 const role =
@@ -10,21 +27,18 @@ role ===
 CONFIG.ROLES.TEACHER
 )
 
-location.href =
-"/pages/teacher/dashboard.html";
+this.navigate("/pages/teacher/dashboard.html");
 
 else if(
 role ===
 CONFIG.ROLES.STUDENT
 )
 
-location.href =
-"/pages/student/dashboard.html";
+this.navigate("/pages/student/dashboard.html");
 
 else
 
-location.href =
-"/pages/auth/login.html";
+this.navigate("/pages/auth/login.html");
 
 },
 
@@ -33,15 +47,13 @@ location.href =
 
 goLogin() {
 
-location.href =
-"/pages/auth/login.html";
+this.navigate("/pages/auth/login.html");
 
 },
 
 goRegister() {
 
-location.href =
-"/pages/auth/register.html";
+this.navigate("/pages/auth/register.html");
 
 },
 
@@ -50,39 +62,36 @@ location.href =
 
 goTeacherDashboard() {
 
-location.href =
-"/pages/teacher/dashboard.html";
+this.navigate("/pages/teacher/dashboard.html");
 
 },
 
 goTeacherClasses() {
 
-location.href =
-"/pages/teacher/classes.html";
+this.navigate("/pages/teacher/classes.html");
 
 },
 
 goAssignments() {
 
-location.href =
-"/pages/teacher/assignments.html";
+this.navigate("/pages/teacher/assignments.html");
 
 },
 
 goStudents() {
 
-location.href =
-"/pages/teacher/classes.html";
+this.navigate("/pages/teacher/classes.html");
 
 },
 
 goAssignmentResults(assignmentId) {
 
-location.href =
+this.navigate(
 
 "/pages/teacher/results.html?assignmentId="
 
-+ assignmentId;
++ assignmentId
+);
 
 },
 
@@ -91,59 +100,58 @@ location.href =
 
 goStudentDashboard() {
 
-location.href =
-"/pages/student/dashboard.html";
+this.navigate("/pages/student/dashboard.html");
 
 },
 
 goStudentClasses() {
 
-location.href =
-"/pages/student/my-classes.html";
+this.navigate("/pages/student/my-classes.html");
 
 },
 
 goJoinClass() {
 
-location.href =
-"/pages/student/join-class.html";
+this.navigate("/pages/student/join-class.html");
 
 },
 
 goStudentAssignments(classId) {
 
-location.href =
+this.navigate(
 
 "/pages/student/assignments.html?classId="
 
-+ classId;
++ classId
+);
 
 },
 
 goExam(assignmentId) {
 
-location.href =
+this.navigate(
 
 "/pages/student/exam.html?assignmentId="
 
-+ assignmentId;
++ assignmentId
+);
 
 },
 
 goHistory() {
 
-location.href =
-"/pages/student/history.html";
+this.navigate("/pages/student/history.html");
 
 },
 
 goResult(assignmentId) {
 
-location.href =
+this.navigate(
 
 "/pages/student/result.html?assignmentId="
 
-+ assignmentId;
++ assignmentId
+);
 
 },
 
@@ -152,15 +160,13 @@ location.href =
 
 goProfile() {
 
-location.href =
-"/pages/shared/profile.html";
+this.navigate("/pages/shared/profile.html");
 
 },
 
 goChangePassword() {
 
-location.href =
-"/pages/shared/change-password.html";
+this.navigate("/pages/shared/change-password.html");
 
 }
 
